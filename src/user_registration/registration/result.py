@@ -1,0 +1,3 @@
+"""
+Registration result foundation.
+"""

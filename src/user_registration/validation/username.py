@@ -1,0 +1,3 @@
+"""
+Username validation foundation.
+"""
