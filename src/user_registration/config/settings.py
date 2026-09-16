@@ -53,7 +53,7 @@ class RegistrationConfig:
     Password policy configuration doesn't belong here as it is delegated to the password-validator-s package.
     """
     username_min_length: int = 4
-    username_max_lenggth: int = 50
+    username_max_length: int = 50
     
     email_required: bool = True
     username_required: bool = True
@@ -70,7 +70,7 @@ class RegistrationConfig:
             raise ConfigurationError(
                 "username_min_length must be greater than 0"
             )
-        if self.username_max_lenggth < self.username_min_length:
+        if self.username_max_length < self.username_min_length:
             raise ConfigurationError(
                 "username_max_length must be greater than or equal to username_min_length"
             )
