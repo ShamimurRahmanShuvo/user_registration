@@ -1,0 +1,3 @@
+"""
+Registration exception hierarchy foundation.
+"""
