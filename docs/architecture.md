@@ -1,5 +1,26 @@
 # Architecture
 
+## Phase 1
+## Architectural Goals
+
+The `user-registration` package is designed to be:
+
+- Framework-agnostic
+- Database-agnostic
+- Extensible
+- Typed
+- Testable
+- Suitable for production integration
+- Independent of application-specific infrastructure
+
+---
+
+# Configuration Architecture
+
+Configuration is represented by:
+
+RegistrationConfig
+
 ## Phase 0 package boundary
 
 `user-registration` owns the registration workflow and the contracts required
@@ -20,7 +41,7 @@ user-registration
     +--> UserRepository abstraction
 ```
 
-`password-validator` answers whether a password satisfies the configured
+`password-validator-s` answers whether a password satisfies the configured
 password policy. The registration package will separately hash the accepted
 password before persistence.
 

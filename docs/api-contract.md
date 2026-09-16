@@ -1,3 +1,33 @@
+# API Contract
+
+## Overview
+
+`user-registration` provides a framework-agnostic user registration
+workflow for Python applications.
+
+The package does not depend on:
+
+- FastAPI
+- Django
+- Flask
+- SQLAlchemy
+- Django ORM
+- PostgreSQL
+- MySQL
+- MongoDB
+- Redis
+
+Framework and database integrations are implemented outside the core package.
+
+---
+
+# Configuration
+
+The primary configuration object is:
+
+```python
+from user_registration import RegistrationConfig
+
 # Public API Contract
 
 The initial public API is intentionally small.
@@ -12,6 +42,4 @@ Planned public objects:
 - `UserRepository`
 - `PasswordHasher`
 
-Phase 1 exposes only the package namespace and version. Concrete public
-objects will be introduced one phase at a time and covered by tests before
-they are considered stable.
+```
