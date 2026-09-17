@@ -3,12 +3,13 @@ Persistence abstraction.
 """
 from __future__ import annotations
 
-from typing import Protocol
+from typing import Protocol, runtime_checkable
 from uuid import UUID
 
-from user_registrations.models import User
+from user_registration.models import User
 
 
+@runtime_checkable
 class UserRepository(Protocol):
     """
     Persistence contract for User objects.
