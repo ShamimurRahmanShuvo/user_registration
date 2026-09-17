@@ -3,6 +3,29 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.0] - Phase 3
+
+### Added
+
+- Added `User` domain model.
+- Added `RegistrationRequest` domain input model.
+- Added UUID-based user identity.
+- Added timezone-aware UTC timestamps.
+- Added immutable user state transitions.
+- Added active/inactive user state.
+- Added password-hash-only representation on `User`.
+- Added domain model unit tests.
+- Added domain model API documentation.
+- Added domain model architecture documentation.
+
+### Design
+
+- Domain models remain framework-agnostic.
+- Domain models remain database-agnostic.
+- Plaintext passwords are never represented by the `User` model.
+- Password hashing remains an infrastructure/service concern.
+- Input validation remains separate from domain representation.
+
 ## [0.1.0] - Phase 2
 
 ### Added

@@ -1,6 +1,5 @@
 # Architecture
 
-## Phase 1
 ## Architectural Goals
 
 The `user-registration` package is designed to be:
@@ -15,13 +14,21 @@ The `user-registration` package is designed to be:
 
 ---
 
-# Configuration Architecture
+## Configuration 
 
 Configuration is represented by:
 
 RegistrationConfig
 
-## Phase 0 package boundary
+## Domain Model
+
+Core registration domain object is represented by:
+
+RegistrationRequest
+
+User
+
+# Package boundary
 
 `user-registration` owns the registration workflow and the contracts required
 to validate and persist a user.
