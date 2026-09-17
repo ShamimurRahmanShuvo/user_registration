@@ -3,6 +3,28 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.0] - Phase 4
+
+### Added
+
+- Added `UserRepository` persistence protocol.
+- Added repository CRUD contract.
+- Added user lookup by UUID.
+- Added user lookup by username.
+- Added user lookup by email.
+- Added username existence check.
+- Added email existence check.
+- Added repository unit tests using a test-only in-memory implementation.
+- Added structural typing tests for repository implementations.
+
+### Design
+
+- Repository abstraction is database-agnostic.
+- Repository abstraction is ORM-agnostic.
+- Core package does not depend on SQLAlchemy, Django ORM, MongoDB,
+  PostgreSQL, MySQL, or other persistence technologies.
+- Database implementations will be provided as separate adapters.
+
 ## [0.1.0] - Phase 3
 
 ### Added

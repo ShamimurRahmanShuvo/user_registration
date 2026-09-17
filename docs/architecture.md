@@ -52,6 +52,33 @@ user-registration
 password policy. The registration package will separately hash the accepted
 password before persistence.
 
+```markdown
+# Repository Architecture
+
+## Persistence Boundary
+
+The repository layer isolates persistence from the registration domain.
+
+```text
+                    Registration Service
+                            |
+                            v
+                    +---------------+
+                    | UserRepository|
+                    |   Protocol    |
+                    +---------------+
+                            |
+              +-------------+-------------+
+              |             |             |
+              v             v             v
+         SQLAlchemy      Django       MongoDB
+          Adapter        Adapter       Adapter
+              |             |             |
+              +-------------+-------------+
+                            |
+                            v
+                        Database
+
 ## Planned flow
 
 ```text

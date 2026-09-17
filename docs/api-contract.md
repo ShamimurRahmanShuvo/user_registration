@@ -16,6 +16,8 @@ The package does not depend on:
 Framework and database integrations are implemented outside the core package.
 
 ---
+# UserRepository
+The `UserRepository` protocol defines the persistence boundary for users
 
 # RegistrationRequest
 `RegistrationRequest` represents data submitted for user registration.
@@ -27,6 +29,7 @@ The primary configuration object is:
 ```python
 from user_registration import RegistrationConfig
 from user_registration import RegistrationRequest
+from user_registration import UserRepository
 ```
 
 # Public API Contract
