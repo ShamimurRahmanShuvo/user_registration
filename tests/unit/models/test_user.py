@@ -120,11 +120,13 @@ def test_activate_already_active_user_returns_same_instance() -> None:
 
 
 def test_user_stores_password_hash_not_plaintext_password() -> None:
+    password_hash = "$argon2id$v=19$example-hash"
+
     user = User.create(
         username="test",
         email="test@example.com",
-        password_hash="$argon2id$v=19$example-hash",
+        password_hash=password_hash,
     )
 
-    assert user.password_hash == "$argon2id$v=19$example-hash"
+    assert user.password_hash == password_hash
     assert not hasattr(user, "password")
