@@ -2,6 +2,7 @@
 from user_registration.config import ConfigurationError, RegistrationConfig
 from user_registration.models import RegistrationRequest, User
 from user_registration.repository import UserRepository
+from user_registration.password import Argon2Hasher, PasswordHasher, PasswordPolicyValidator, PasswordValidatorAdapter
 
 
 __version__ = "0.1.0"
@@ -12,5 +13,9 @@ __all__ = [
     "RegistrationConfig",
     "RegistrationRequest",
     "User",
-    "UserRepository"
+    "UserRepository",
+    "PasswordHasher",
+    "Argon2Hasher",
+    "PasswordPolicyValidator",
+    "PasswordValidatorAdapter"
 ]

@@ -3,7 +3,6 @@ from uuid import UUID
 
 import pytest
 from user_registration import User
-from user_registration.models.user import utc_now
 
 
 def test_user_create() -> None:
@@ -118,3 +117,16 @@ def test_activate_already_active_user_returns_same_instance() -> None:
     activated = user.activate()
 
     assert activated is user
+
+
+def test_user_stores_password_hash_not_plaintext_password() -> None:
+    password_hash = "$argon2id$v=19$example-hash"
+
+    user = User.create(
+        username="test",
+        email="test@example.com",
+        password_hash=password_hash,
+    )
+
+    assert user.password_hash == password_hash
+    assert not hasattr(user, "password")
