@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing import Protocol, runtime_checkable
 
 from argon2 import PasswordHasher as Argon2PasswordHasher
-from argon2.exception import InvalidHashError, VerificationError, VerifyMatchError
+from argon2.exceptions import InvalidHashError, VerificationError, VerifyMismatchError
 
 
 @runtime_checkable
@@ -58,5 +58,5 @@ class Argon2Hasher:
 
         try:
             return self._hasher.verify(password_hash, password)
-        except (VerifyMatchError, VerificationError, InvalidHashError):
+        except (VerifyMismatchError, VerificationError, InvalidHashError):
             return False
