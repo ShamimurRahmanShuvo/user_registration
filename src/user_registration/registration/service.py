@@ -81,7 +81,7 @@ class RegistrationService:
         return RegistrationResult.successful(persisted_user.id)
 
     def _validate_required_fields(self, request: RegistrationRequest) -> list[str]:
-        errors = list[str] = []
+        errors: list[str] = []
 
         if self._config.username_required and not request.username:
             errors.append("Username is required")
@@ -111,7 +111,7 @@ class RegistrationService:
         return value.strip()
 
     def _validate_username_and_email(self, username: str, email: str) -> list[str]:
-        errors = list[str] = []
+        errors: list[str] = []
         min_length = self._config.username_min_length
         max_length = self._config.username_max_length
 
@@ -127,7 +127,7 @@ class RegistrationService:
         return errors
 
     def _check_duplicates(self, *, username: str, email: str) -> list[str]:
-        errors = list[str] = []
+        errors: list[str] = []
 
         if self._config.username_required and self._repository.exists_by_username(username):
             errors.append("Username is already registered")
