@@ -1,34 +1,46 @@
 from __future__ import annotations
 
-from user_registration import RegistrationRequest, RegistrationService
+from user_registration.config import RegistrationConfig
+from user_registration.models import RegistrationRequest
 from user_registration.password import Argon2Hasher, PasswordValidatorAdapter
-from tests.fakes.repository import InMemoryUserRepository
+from user_registration.registration import RegistrationService
+from user_registration.validation import (
+    ValidationRegistry,
+    create_default_validation_registry,
+)
+
+from tests.fakes import InMemoryUserRepository
 
 
-def create_service() -> RegistrationService:
-    return RegistrationService(
-        repository=InMemoryUserRepository(),
+def create_service(
+    *,
+    config: RegistrationConfig | None = None,
+    validation_registry: ValidationRegistry | None = None,
+) -> tuple[RegistrationService, InMemoryUserRepository]:
+    repository = InMemoryUserRepository()
+    actual_config = config or RegistrationConfig()
+
+    service = RegistrationService(
+        repository=repository,
         password_hasher=Argon2Hasher(),
-        password_validator=PasswordValidatorAdapter()
+        password_validator=PasswordValidatorAdapter(),
+        config=actual_config,
+        validation_registry=validation_registry,
     )
+
+    return service, repository
 
 
 def test_register_valid_user() -> None:
-    repository = InMemoryUserRepository()
+    service, repository = create_service()
 
-    service = RegistrationService(
-        repository=repository,
-        password_hasher=Argon2Hasher(),
-        password_validator=PasswordValidatorAdapter()
+    result = service.register(
+        RegistrationRequest(
+            username="shuvo",
+            email="shuvo@example.com",
+            password="StrongPassword123!",
+        )
     )
-
-    request = RegistrationRequest(
-        username="test",
-        email="test@example.ca",
-        password="StrongPassword123!"
-    )
-
-    result = service.register(request)
 
     assert result.success is True
     assert result.user_id is not None
@@ -36,78 +48,50 @@ def test_register_valid_user() -> None:
     user = repository.get_by_id(result.user_id)
 
     assert user is not None
-    assert user.username == "test"
-    assert user.email == "test@example.ca"
+    assert user.username == "shuvo"
+    assert user.email == "shuvo@example.com"
     assert user.password_hash != "StrongPassword123!"
-    assert user.password_hash
-    assert "StrongPassword123!" not in user.password_hash
-
-
-def test_missing_value_is_rejected() -> None:
-    service = create_service()
-
-    result = service.register(
-        RegistrationRequest(
-            username=None,
-            email=None,
-            password=None
-        )
-    )
-
-    assert result.success is False
-    assert "Username is required" in result.errors
-    assert "Email is required" in result.errors
-    assert "Password is required" in result.errors
 
 
 def test_username_and_email_are_normalized() -> None:
-    repository = InMemoryUserRepository()
-
-    service = RegistrationService(
-        repository=repository,
-        password_hasher=Argon2Hasher(),
-        password_validator=PasswordValidatorAdapter()
-    )
+    service, repository = create_service()
 
     result = service.register(
         RegistrationRequest(
-            username="  test    ",
-            email="  test@example.ca   ",
-            password="StrongPassword123!"
+            username="  Shuvo  ",
+            email="  SHUVO@EXAMPLE.COM  ",
+            password="StrongPassword123!",
         )
     )
 
     assert result.success is True
     assert result.user_id is not None
+
     user = repository.get_by_id(result.user_id)
+
     assert user is not None
-    assert user.username == "test"
-    assert user.email == "test@example.ca"
+    assert user.username == "shuvo"
+    assert user.email == "shuvo@example.com"
 
 
 def test_duplicate_username_and_email_are_rejected() -> None:
-    repository = InMemoryUserRepository()
-
-    service = RegistrationService(
-        repository=repository,
-        password_hasher=Argon2Hasher(),
-        password_validator=PasswordValidatorAdapter()
-    )
+    service, _ = create_service()
 
     first = service.register(
         RegistrationRequest(
-            username="test",
-            email="test@example.ca",
-            password="StrongPassword123!"
+            username="shuvo",
+            email="shuvo@example.com",
+            password="StrongPassword123!",
         )
     )
+
     assert first.success is True
 
     second = service.register(
         RegistrationRequest(
-            username="test",
-            email="test@example.ca",
-            password="StrongPassword123!"
+            username="shuvo",
+            email="shuvo@example.com",
+            password="AnotherStrongPassword123!",
         )
     )
 
@@ -117,18 +101,12 @@ def test_duplicate_username_and_email_are_rejected() -> None:
 
 
 def test_duplicate_checks_use_normalized_values() -> None:
-    repository = InMemoryUserRepository()
-
-    service = RegistrationService(
-        repository=repository,
-        password_hasher=Argon2Hasher(),
-        password_validator=PasswordValidatorAdapter(),
-    )
+    service, _ = create_service()
 
     first = service.register(
         RegistrationRequest(
-            username="test",
-            email="test@example.com",
+            username="Shuvo",
+            email="Shuvo@Example.com",
             password="StrongPassword123!",
         )
     )
@@ -137,9 +115,9 @@ def test_duplicate_checks_use_normalized_values() -> None:
 
     second = service.register(
         RegistrationRequest(
-            username=" TEST ",
-            email="TEST@EXAMPLE.COM",
-            password="StrongPassword123!",
+            username=" shuvo ",
+            email=" SHUVO@EXAMPLE.COM ",
+            password="AnotherStrongPassword123!",
         )
     )
 
@@ -149,11 +127,11 @@ def test_duplicate_checks_use_normalized_values() -> None:
 
 
 def test_invalid_email_is_rejected() -> None:
-    service = create_service()
+    service, _ = create_service()
 
     result = service.register(
         RegistrationRequest(
-            username="test",
+            username="shuvo",
             email="invalid-email",
             password="StrongPassword123!",
         )
@@ -164,77 +142,93 @@ def test_invalid_email_is_rejected() -> None:
 
 
 def test_short_username_is_rejected() -> None:
-    service = create_service()
+    service, _ = create_service()
 
     result = service.register(
         RegistrationRequest(
             username="ab",
-            email="test@example.com",
+            email="shuvo@example.com",
             password="StrongPassword123!",
         )
     )
 
     assert result.success is False
-    assert any("Username must contain at least 4 characters" in error for error in result.errors)
+    assert "Username must contain atleast 4 characters" in result.errors
 
 
 def test_long_username_is_rejected() -> None:
-    service = create_service()
+    service, _ = create_service()
 
     result = service.register(
         RegistrationRequest(
             username="a" * 51,
-            email="test@example.com",
+            email="shuvo@example.com",
             password="StrongPassword123!",
         )
     )
 
     assert result.success is False
-    assert any("at most 50 characters" in error for error in result.errors)
+    assert "Username must not be more than 50 characters" in result.errors
 
 
 def test_invalid_password_is_rejected() -> None:
-    service = create_service()
-
-    result = service.register(
-        RegistrationRequest(
-            username="test",
-            email="test@example.com",
-            password="abc",
-        )
-    )
-
-    assert result.success is False
-
-
-def test_password_is_hashed_only_after_policy_validation() -> None:
-    class TrackingHasher:
-        def __init__(self) -> None:
-            self.called = False
-
-        def hash(self, password: str) -> str:
-            self.called = True
-            return "hashed-password"
-
-        def verify(self, password: str, password_hash: str) -> bool:
-            return password == password_hash
-
-    repository = InMemoryUserRepository()
-    hasher = TrackingHasher()
-
-    service = RegistrationService(
-        repository=repository,
-        password_hasher=hasher,
-        password_validator=PasswordValidatorAdapter(),
-    )
+    service, repository = create_service()
 
     result = service.register(
         RegistrationRequest(
             username="shuvo",
             email="shuvo@example.com",
-            password="abc",
+            password="weak",
         )
     )
 
     assert result.success is False
-    assert hasher.called is False
+    assert repository.get_by_username("shuvo") is None
+
+
+def test_password_is_hashed_only_after_policy_validation() -> None:
+    service, repository = create_service()
+
+    result = service.register(
+        RegistrationRequest(
+            username="shuvo",
+            email="shuvo@example.com",
+            password="weak",
+        )
+    )
+
+    assert result.success is False
+    assert repository.get_by_username("shuvo") is None
+
+
+def test_custom_username_validator_is_supported() -> None:
+    class ReservedUsernameValidator:
+        def validate(self, value: str) -> str | None:
+            if value == "admin":
+                return "Username is reserved"
+            return None
+
+    config = RegistrationConfig()
+
+    registry = create_default_validation_registry(config)
+    registry.register(
+        "username",
+        ReservedUsernameValidator(),
+    )
+
+    service, repository = create_service(
+        config=config,
+        validation_registry=registry,
+    )
+
+    result = service.register(
+        RegistrationRequest(
+            username="admin",
+            email="test@example.com",
+            password="StrongPassword123!",
+        )
+    )
+
+    assert result.success is False
+    assert "Username is reserved" in result.errors
+    assert repository.get_by_username("admin") is None

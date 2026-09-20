@@ -29,7 +29,8 @@ from user_registration.validation import (
     FieldValidator,
     UsernameValidator,
     ValidationError,
-    ValidationRegistry
+    ValidationRegistry,
+    create_default_validation_registry
 )
 
 
@@ -56,5 +57,6 @@ __all__ = [
     "ValidationError",
     "UsernameValidator",
     "EmailValidator",
-    "ValidationRegistry"
+    "ValidationRegistry",
+    "create_default_validation_registry"
 ]

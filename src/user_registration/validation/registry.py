@@ -3,7 +3,7 @@ Validator registry foundation.
 """
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from user_registration.validation.base import FieldValidator
 
