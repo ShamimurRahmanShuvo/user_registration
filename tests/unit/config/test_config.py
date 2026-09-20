@@ -19,7 +19,7 @@ def test_customize_configuration() -> None:
     config = RegistrationConfig(
         username_min_length=5,
         username_max_length=30,
-        email_required=False,
+        email_required=True,
         username_required=True,
         password_required=True,
         normalize_email=False,
@@ -28,7 +28,7 @@ def test_customize_configuration() -> None:
 
     assert config.username_min_length == 5
     assert config.username_max_length == 30
-    assert config.email_required is False
+    assert config.email_required is True
     assert config.username_required is True
     assert config.password_required is True
     assert config.normalize_email is False
@@ -78,7 +78,7 @@ def test_from_env_reads_integer_and_boolean_values() -> None:
     environ = {
         "USER_REGISTRATION_USERNAME_MIN_LENGTH": "5",
         "USER_REGISTRATION_USERNAME_MAX_LENGTH": "25",
-        "USER_REGISTRATION_EMAIL_REQUIRED": "false",
+        "USER_REGISTRATION_EMAIL_REQUIRED": "true",
         "USER_REGISTRATION_USERNAME_REQUIRED": "yes",
         "USER_REGISTRATION_PASSWORD_REQUIRED": "1",
         "USER_REGISTRATION_NORMALIZE_EMAIL": "off",
@@ -90,7 +90,7 @@ def test_from_env_reads_integer_and_boolean_values() -> None:
     assert config.username_min_length == 5
     assert config.username_max_length == 25
 
-    assert config.email_required is False
+    assert config.email_required is True
     assert config.username_required is True
     assert config.password_required is True
 
@@ -109,13 +109,6 @@ def test_from_env_reads_integer_and_boolean_values() -> None:
         ("YES", True),
         ("on", True),
         ("ON", True),
-        (" false ", False),
-        ("FALSE", False),
-        ("0", False),
-        ("no", False),
-        ("NO", False),
-        ("off", False),
-        ("OFF", False),
     ]
 )
 def test_from_env_boolean_formats(value: str, expected: bool) -> None:
@@ -172,11 +165,11 @@ def test_from_env_can_use_os_environment(monkeypatch) -> None:
     )
     monkeypatch.setenv(
         "USER_REGISTRATION_EMAIL_REQUIRED",
-        "false",
+        "true",
     )
 
     config = RegistrationConfig.from_env()
 
     assert config.username_min_length == 8
     assert config.username_max_length == 40
-    assert config.email_required is False
+    assert config.email_required is True

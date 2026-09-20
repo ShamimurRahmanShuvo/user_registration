@@ -66,6 +66,21 @@ class RegistrationConfig:
     
     def __post_init__(self) -> None:
         """Validate configuration after object construction"""
+        if not self.username_required:
+            raise ConfigurationError(
+                "username_required=False is not supported"
+            )
+
+        if not self.email_required:
+            raise ConfigurationError(
+                "email_required=False is not supported"
+            )
+
+        if not self.password_required:
+            raise ConfigurationError(
+                "password_required=False is not supported"
+            )
+
         if self.username_min_length < 1:
             raise ConfigurationError(
                 "username_min_length must be greater than 0"

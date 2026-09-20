@@ -3,6 +3,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.0] - Phase 8
+- Registration transaction boundary
+- Repository error abstraction
+- Password-hashing configuration
+- Stronger validation/result modeling
+- Registration lifecycle hooks with failure semantics
+- Dependency-injection-friendly factory
+- Framework-neutral DTO/API mapping
+- Security hardening
+- Comprehensive integration tests
+- Documentation and package exports
+
 ## [0.1.0] - Phase 4
 
 ### Added

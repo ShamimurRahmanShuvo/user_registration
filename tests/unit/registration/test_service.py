@@ -8,6 +8,7 @@ from user_registration.validation import (
     ValidationRegistry,
     create_default_validation_registry,
 )
+from user_registration.repository import DuplicateUserError
 
 from tests.fakes import InMemoryUserRepository
 
@@ -232,3 +233,29 @@ def test_custom_username_validator_is_supported() -> None:
     assert result.success is False
     assert "Username is reserved" in result.errors
     assert repository.get_by_username("admin") is None
+
+
+def test_repository_duplicate_error_is_handled() -> None:
+    class DuplicateRepository(InMemoryUserRepository):
+        def create(self, user):
+            raise DuplicateUserError(
+                "Database unique constraint violation",
+            )
+
+    service = RegistrationService(
+        repository=DuplicateRepository(),
+        password_hasher=Argon2Hasher(),
+        password_validator=PasswordValidatorAdapter(),
+    )
+
+    result = service.register(
+        RegistrationRequest(
+            username="test",
+            email="test@example.com",
+            password="StrongPassword123!",
+        )
+    )
+
+    assert result.success is False
+    assert result.status.value == "duplicate"
+    assert result.user_id is None
