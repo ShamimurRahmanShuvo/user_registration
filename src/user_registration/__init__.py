@@ -5,6 +5,8 @@ from user_registration.config import (
 )
 from user_registration.exceptions import (
     RegistrationError,
+    RegistrationHookError,
+    RegistrationPersistenceError,
     UserAlreadyExistsError
 )
 from user_registration.models import (
@@ -12,6 +14,7 @@ from user_registration.models import (
     User
 )
 from user_registration.password import (
+    Argon2Config,
     Argon2Hasher,
     PasswordHasher,
     PasswordPolicyValidator,
@@ -21,9 +24,15 @@ from user_registration.registration import (
     NoOpRegistrationHook,
     RegistrationHook,
     RegistrationResult,
-    RegistrationService
+    RegistrationService,
+    RegistrationStatus
 )
-from user_registration.repository import UserRepository
+from user_registration.repository import (
+    DuplicateUserError,
+    RepositoryError,
+    UserRepository
+)
+from user_registration.security import generate_token
 from user_registration.validation import (
     EmailValidator,
     FieldValidator,
@@ -43,13 +52,18 @@ __all__ = [
     "RegistrationRequest",
     "User",
     "UserRepository",
+    "RepositoryError",
+    "DuplicateUserError",
     "PasswordHasher",
     "Argon2Hasher",
     "PasswordPolicyValidator",
     "PasswordValidatorAdapter",
     "RegistrationError",
     "UserAlreadyExistsError",
+    "RegistrationPersistenceError",
+    "RegistrationHookError",
     "RegistrationResult",
+    "RegistrationStatus",
     "RegistrationService",
     "RegistrationHook",
     "NoOpRegistrationHook",
@@ -58,5 +72,6 @@ __all__ = [
     "UsernameValidator",
     "EmailValidator",
     "ValidationRegistry",
-    "create_default_validation_registry"
+    "create_default_validation_registry",
+    "generate_token"
 ]

@@ -9,6 +9,14 @@ from uuid import UUID
 from user_registration.models import User
 
 
+class RepositoryError(Exception):
+    """Base exception for repository failures"""
+
+
+class DuplicateUserError(RepositoryError):
+    """Raised when persistence detects a unique constraint violation"""
+
+
 @runtime_checkable
 class UserRepository(Protocol):
     """

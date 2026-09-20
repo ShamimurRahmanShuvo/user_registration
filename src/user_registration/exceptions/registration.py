@@ -12,5 +12,9 @@ class UserAlreadyExistsError(RegistrationError):
     """Raised when a username or email is already registered"""
 
 
-class UserNotFoundError(RegistrationError):
-    """Raised when an expected user cannot be found"""
+class RegistrationPersistenceError(RegistrationError):
+    """Raised when user persistance fails"""
+
+
+class RegistrationHookError(RegistrationError):
+    """Raised whena registration hook fails"""

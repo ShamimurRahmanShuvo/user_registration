@@ -6,11 +6,12 @@ from __future__ import annotations
 from password_validator.models import ValidationResult
 
 from user_registration.config import RegistrationConfig
+from user_registration.exceptions import RegistrationPersistenceError
 from user_registration.models import RegistrationRequest, User
 from user_registration.password import PasswordHasher, PasswordPolicyValidator
-from user_registration.repository import UserRepository
 from user_registration.registration.hooks import RegistrationHook
 from user_registration.registration.result import RegistrationResult
+from user_registration.repository import DuplicateUserError, UserRepository
 from user_registration.validation import ValidationRegistry, create_default_validation_registry
 
 
@@ -55,7 +56,7 @@ class RegistrationService:
         errors = self._validate_required_fields(request)
 
         if errors:
-            return RegistrationResult.failed(*errors)
+            return RegistrationResult.validation_failed(*errors)
 
         username = self._normalize_username(request.username)
         email = self._normalize_email(request.email)
@@ -66,7 +67,7 @@ class RegistrationService:
         )
 
         if validation_errors:
-            return RegistrationResult.failed(*validation_errors)
+            return RegistrationResult.validation_failed(*validation_errors)
 
         duplicate_errors = self._check_duplicates(
             username=username,
@@ -74,14 +75,14 @@ class RegistrationService:
         )
 
         if duplicate_errors:
-            return RegistrationResult.failed(*duplicate_errors)
+            return RegistrationResult.validation_failed(*duplicate_errors)
 
         assert request.password is not None
 
         password_result = self._password_validator.validate(request.password)
 
         if not password_result.valid:
-            return RegistrationResult.failed(*self._password_errors(password_result))
+            return RegistrationResult.validation_failed(*self._password_errors(password_result))
 
         password_hash = self._password_hasher.hash(request.password)
 
@@ -91,7 +92,16 @@ class RegistrationService:
             password_hash=password_hash,
         )
 
-        persisted_user = self._repository.create(user)
+        try:
+            persisted_user = self._repository.create(user)
+        except DuplicateUserError:
+            return RegistrationResult.duplicate(
+                "Username or email is already registered"
+            )
+        except Exception as exc:
+            raise RegistrationPersistenceError(
+                "Unable to persist registered user"
+            ) from exc
 
         self._execute_hooks(persisted_user)
 
@@ -163,10 +173,8 @@ class RegistrationService:
         This method is intentionally defensive until the exact public
         ValidationResult error representation is finalized.
         """
-        errors = getattr(password_result, "errors", ())
-
-        if errors:
-            return [str(error) for error in errors]
+        if password_result.errors:
+            return [str(error) for error in password_result.errors]
 
         return ["Password does not satisfy the configured policy"]
 

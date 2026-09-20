@@ -3,6 +3,7 @@ from __future__ import annotations
 from uuid import UUID
 
 from user_registration.models import User
+from user_registration.repository import DuplicateUserError
 
 
 class InMemoryUserRepository:
@@ -16,7 +17,14 @@ class InMemoryUserRepository:
         self._users: dict[UUID, User] = {}
 
     def create(self, user: User) -> User:
+        if self.exists_by_username(user.username):
+            raise DuplicateUserError("Username already exists")
+
+        if self.exists_by_email(user.email):
+            raise DuplicateUserError("Email already exists")
+
         self._users[user.id] = user
+
         return user
 
     def get_by_id(self, user_id: UUID) -> User | None:
@@ -26,12 +34,14 @@ class InMemoryUserRepository:
         for user in self._users.values():
             if user.username == username:
                 return user
+
         return None
 
     def get_by_email(self, email: str) -> User | None:
         for user in self._users.values():
             if user.email == email:
                 return user
+
         return None
 
     def exists_by_username(self, username: str) -> bool:
@@ -45,6 +55,7 @@ class InMemoryUserRepository:
             raise KeyError(f"User {user.id} does not exist")
 
         self._users[user.id] = user
+
         return user
 
     def delete(self, user_id: UUID) -> bool:
@@ -52,4 +63,5 @@ class InMemoryUserRepository:
             return False
 
         del self._users[user_id]
+
         return True
