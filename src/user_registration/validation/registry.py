@@ -43,9 +43,15 @@ class ValidationRegistry:
 
     def has_validators(self, field_name: str) -> bool:
         """Returns whether a validator exists for a field"""
+        normalized_field_name = field_name.strip().lower()
 
-        return bool(self._validators.get(field_name))
+        return bool(self._validators.get(normalized_field_name))
 
     def clear(self, field_name: str) -> None:
         """Remove all validators for a field"""
-        self._validators.pop(field_name, None)
+        normalized_field_name = field_name.strip().lower()
+
+        self._validators.pop(normalized_field_name, None)
+
+    def clear_all(self) -> None:
+        self._validators.clear()
