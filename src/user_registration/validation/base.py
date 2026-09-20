@@ -1,4 +1,18 @@
 """
 Validation abstractions.
-Phase 2/6 will add built-in and custom validators.
 """
+from __future__ import annotations
+
+from typing import Protocol, runtime_checkable
+
+
+@runtime_checkable
+class FieldValidator(Protocol):
+    """Contract for validating an individual registration field"""
+    def validate(self, value:str) -> ValidationError | None:
+        """Return a validation error or None when the value is valid"""
+        ...
+
+
+class ValidationError:
+    """Represents a validation failure"""

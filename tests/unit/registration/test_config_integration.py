@@ -1,18 +1,15 @@
-from __future__ import annotations
-
-from user_registration import RegistrationConfig, RegistrationRequest, RegistrationService
+from user_registration.config import RegistrationConfig
+from user_registration.models import RegistrationRequest
 from user_registration.password import Argon2Hasher, PasswordValidatorAdapter
+from user_registration.registration import RegistrationService
 
-from tests.fakes.repository import InMemoryUserRepository
+from tests.fakes import InMemoryUserRepository
 
 
-def test_custom_username_length_configuration() -> None:
+def create_service(
+    config: RegistrationConfig,
+) -> tuple[RegistrationService, InMemoryUserRepository]:
     repository = InMemoryUserRepository()
-
-    config = RegistrationConfig(
-        username_min_length=5,
-        username_max_length=20,
-    )
 
     service = RegistrationService(
         repository=repository,
@@ -20,6 +17,17 @@ def test_custom_username_length_configuration() -> None:
         password_validator=PasswordValidatorAdapter(),
         config=config,
     )
+
+    return service, repository
+
+
+def test_custom_username_length_configuration() -> None:
+    config = RegistrationConfig(
+        username_min_length=5,
+        username_max_length=20,
+    )
+
+    service, _ = create_service(config)
 
     result = service.register(
         RegistrationRequest(
@@ -30,31 +38,21 @@ def test_custom_username_length_configuration() -> None:
     )
 
     assert result.success is False
-    assert any(
-        "at least 5 characters" in error
-        for error in result.errors
-    )
+    assert "Username must contain atleast 5 characters" in result.errors
 
 
 def test_normalization_can_be_disabled() -> None:
-    repository = InMemoryUserRepository()
-
     config = RegistrationConfig(
         normalize_username=False,
         normalize_email=False,
     )
 
-    service = RegistrationService(
-        repository=repository,
-        password_hasher=Argon2Hasher(),
-        password_validator=PasswordValidatorAdapter(),
-        config=config,
-    )
+    service, repository = create_service(config)
 
     result = service.register(
         RegistrationRequest(
-            username="test",
-            email="TEST@example.com",
+            username="  Shuvo  ",
+            email="  SHUVO@EXAMPLE.COM  ",
             password="StrongPassword123!",
         )
     )
@@ -65,5 +63,5 @@ def test_normalization_can_be_disabled() -> None:
     user = repository.get_by_id(result.user_id)
 
     assert user is not None
-    assert user.username == "test"
-    assert user.email == "TEST@example.com"
+    assert user.username == "Shuvo"
+    assert user.email == "SHUVO@EXAMPLE.COM"

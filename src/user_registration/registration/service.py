@@ -9,7 +9,9 @@ from user_registration.config import RegistrationConfig
 from user_registration.models import RegistrationRequest, User
 from user_registration.password import PasswordHasher, PasswordPolicyValidator
 from user_registration.repository import UserRepository
+from user_registration.registration.hooks import RegistrationHook
 from user_registration.registration.result import RegistrationResult
+from user_registration.validation import ValidationRegistry, create_default_validation_registry
 
 
 class RegistrationService:
@@ -17,12 +19,24 @@ class RegistrationService:
     Coordinates the user registration workflow.
     The service is independent of web frameworks, databases, ORMs, and authentication/session mechanism.
     """
-    def __init__(self, *, repository: UserRepository, password_hasher: PasswordHasher,
-                 password_validator: PasswordPolicyValidator, config: RegistrationConfig | None = None) -> None:
+    def __init__(self, *,
+                 repository: UserRepository,
+                 password_hasher: PasswordHasher,
+                 password_validator: PasswordPolicyValidator,
+                 config: RegistrationConfig | None = None,
+                 validation_registry: ValidationRegistry | None = None,
+                 hooks: tuple[RegistrationHook, ...] = ()
+                 ) -> None:
         self._repository = repository
         self._password_hasher = password_hasher
         self._password_validator = password_validator
         self._config = config or RegistrationConfig()
+
+        self._validation_registry = (
+            validation_registry if validation_registry is not None
+            else create_default_validation_registry(self._config)
+        )
+        self._hooks = hooks
 
     def register(self, request: RegistrationRequest) -> RegistrationResult:
         """
@@ -36,6 +50,7 @@ class RegistrationService:
             6. Hash password.
             7. Create domain User.
             8. Persist User.
+            9. Execute registration hooks.
         """
         errors = self._validate_required_fields(request)
 
@@ -45,7 +60,7 @@ class RegistrationService:
         username = self._normalize_username(request.username)
         email = self._normalize_email(request.email)
 
-        validation_errors = self._validate_username_and_email(
+        validation_errors = self._validate_fields(
             username=username,
             email=email
         )
@@ -77,6 +92,8 @@ class RegistrationService:
         )
 
         persisted_user = self._repository.create(user)
+
+        self._execute_hooks(persisted_user)
 
         return RegistrationResult.successful(persisted_user.id)
 
@@ -110,19 +127,22 @@ class RegistrationService:
 
         return value.strip()
 
-    def _validate_username_and_email(self, username: str, email: str) -> list[str]:
+    def _validate_fields(self, *, username: str, email: str) -> list[str]:
         errors: list[str] = []
-        min_length = self._config.username_min_length
-        max_length = self._config.username_max_length
 
         if self._config.username_required:
-            if len(username) < min_length:
-                errors.append(f"Username must contain at least {min_length} characters")
-            if len(username) > max_length:
-                errors.append(f"Username must contain at most {max_length} characters")
+            errors.extend(
+                self._validation_registry.validate(
+                    "username", username,
+                )
+            )
 
-        if self._config.email_required and '@' not in email:
-            errors.append("Email address is invalid")
+        if self._config.email_required:
+            errors.extend(
+                self._validation_registry.validate(
+                    "email", email,
+                )
+            )
 
         return errors
 
@@ -149,4 +169,8 @@ class RegistrationService:
             return [str(error) for error in errors]
 
         return ["Password does not satisfy the configured policy"]
+
+    def _execute_hooks(self, user: User) -> None:
+        for hook in self._hooks:
+            hook.after_registration(user)
 
