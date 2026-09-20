@@ -16,9 +16,11 @@ class ValidationRegistry:
     """
     _validators: dict[str, list[FieldValidator]] = field(default_factory=dict)
 
-    def register(self, field_name: str, validator:FieldValidator) -> None:
+    def register(self, field_name: str, validator: FieldValidator) -> None:
         """Register a validator for a field"""
-        if not field_name:
+        normalized_field_name = field_name.strip().lower()
+
+        if not normalized_field_name:
             raise ValueError("field_name must not be empty")
 
         self._validators.setdefault(field_name, []).append(validator)
@@ -28,9 +30,10 @@ class ValidationRegistry:
         Execute all validators registered for a field.
         Returns validation error message.
         """
+        normalized_field_name = field_name.strip().lower()
         errors: list[str] = []
 
-        for validator in self._validators.get(field_name, []):
+        for validator in self._validators.get(normalized_field_name, []):
             error = validator.validate(value)
 
             if error is not None:
