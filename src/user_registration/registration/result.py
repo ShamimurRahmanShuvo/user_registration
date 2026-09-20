@@ -22,31 +22,31 @@ class RegistrationResult:
     Successful result contains newly created user's ID
     Failed validation returns errors without exposing sensitive data.
     """
+    success: bool
     status: RegistrationStatus
     user_id: UUID | None = None
     errors: tuple[str, ...] = ()
 
-    @property
-    def success(self) -> bool:
-        return self.status is RegistrationStatus.SUCCESS
-
     @classmethod
     def successful(cls, user_id: UUID) -> RegistrationResult:
         return cls(
-            success=RegistrationStatus.SUCCESS,
-            user_id=user_id
+            success=True,
+            user_id=user_id,
+            status=RegistrationStatus.SUCCESS
         )
 
     @classmethod
     def validation_failed(cls, *errors: str) -> RegistrationResult:
         return cls(
-            success=RegistrationStatus.VALIDATION_ERROR,
-            errors=tuple(errors)
+            success=False,
+            errors=tuple(errors),
+            status=RegistrationStatus.VALIDATION_ERROR
         )
 
     @classmethod
     def duplicate(cls, *errors: str) -> RegistrationResult:
         return cls(
+            success=False,
             status=RegistrationStatus.DUPLICATE,
             errors=tuple(errors)
         )
@@ -54,6 +54,7 @@ class RegistrationResult:
     @classmethod
     def persistence_failed(cls, *errors: str) -> RegistrationResult:
         return cls(
-            success=RegistrationStatus.PERSISTENCE_ERROR,
+            success=False,
+            status=RegistrationStatus.PERSISTENCE_ERROR,
             errors=tuple(errors)
         )
