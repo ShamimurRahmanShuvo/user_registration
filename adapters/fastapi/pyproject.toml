@@ -1,0 +1,26 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "user-registration-fastapi"
+version = "0.1.0"
+description = "FastAPI adapter for user-registration."
+requires-python = ">=3.12"
+
+dependencies = [
+    "user-registration>=0.1.0,<1.0.0",
+    "fastapi>=0.115,<1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3",
+    "pytest-cov>=5.0",
+    "httpx>=0.28,<1.0",
+    "mypy>=1.13",
+    "ruff>=0.9",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["user_registration_fastapi"]
