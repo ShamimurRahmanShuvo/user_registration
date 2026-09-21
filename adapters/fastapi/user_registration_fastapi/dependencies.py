@@ -17,5 +17,5 @@ def get_registration_service() -> RegistrationService:
 
 RegistrationServiceDependency = Annotated[
     RegistrationService,
-    Depends(get_registration_service())
+    Depends(get_registration_service)
 ]

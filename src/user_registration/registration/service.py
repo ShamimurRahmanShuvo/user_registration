@@ -75,7 +75,7 @@ class RegistrationService:
         )
 
         if duplicate_errors:
-            return RegistrationResult.validation_failed(*duplicate_errors)
+            return RegistrationResult.duplicate(*duplicate_errors)
 
         assert request.password is not None
 
