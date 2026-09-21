@@ -24,7 +24,7 @@ def register_user(payload: RegisterUserRequest, service: RegistrationServiceDepe
 
     if result.status is RegistrationStatus.VALIDATION_ERROR:
         raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
             detail=list(result.errors)
         )
 
