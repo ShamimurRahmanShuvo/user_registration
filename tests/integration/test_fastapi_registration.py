@@ -1,16 +1,16 @@
+from uuid import UUID
+
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
+from user_registration_fastapi import get_registration_service, router
 
+from tests.fakes import InMemoryUserRepository
 from user_registration import (
     Argon2Hasher,
     PasswordValidatorAdapter,
     RegistrationConfig,
     RegistrationService,
 )
-
-from user_registration_fastapi import get_registration_service, router
-
-from tests.fakes import InMemoryUserRepository
 
 
 def create_app() -> FastAPI:
@@ -229,9 +229,6 @@ def test_successful_registration_does_not_return_password() -> None:
     assert "password" not in response_body
     assert "password_hash" not in response_body
     assert password not in response.text
-
-
-from uuid import UUID
 
 
 def test_successful_registration_returns_user_id() -> None:

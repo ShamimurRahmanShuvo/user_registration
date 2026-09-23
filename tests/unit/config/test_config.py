@@ -128,7 +128,10 @@ def test_from_env_uses_defaults_for_missing_variables() -> None:
 
 
 def test_from_env_rejects_invalid_integer() -> None:
-    with pytest.raises(ConfigurationError, match="USER_REGISTRATION_USERNAME_MIN_LENGTH must be integer; got 'abc'"):
+    with pytest.raises(
+            ConfigurationError,
+            match="USER_REGISTRATION_USERNAME_MIN_LENGTH must be integer; got 'abc'"
+    ):
         RegistrationConfig.from_env(
             {
                 "USER_REGISTRATION_USERNAME_MIN_LENGTH": "abc",
@@ -137,7 +140,10 @@ def test_from_env_rejects_invalid_integer() -> None:
 
 
 def test_from_env_rejects_empty_integer() -> None:
-    with pytest.raises(ConfigurationError, match="USER_REGISTRATION_USERNAME_MIN_LENGTH must be integer; got ''"):
+    with pytest.raises(
+            ConfigurationError,
+            match="USER_REGISTRATION_USERNAME_MIN_LENGTH must be integer; got ''"
+    ):
         RegistrationConfig.from_env(
             {
                 "USER_REGISTRATION_USERNAME_MIN_LENGTH": "",

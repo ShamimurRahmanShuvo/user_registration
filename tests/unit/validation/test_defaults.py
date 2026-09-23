@@ -1,6 +1,5 @@
 from user_registration.config import RegistrationConfig
 from user_registration.validation import (
-    UsernameValidator,
     create_default_validation_registry,
 )
 

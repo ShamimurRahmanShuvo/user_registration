@@ -1,4 +1,4 @@
-from user_registration.validation import ValidationRegistry, UsernameValidator
+from user_registration.validation import UsernameValidator, ValidationRegistry
 
 
 class ReservedUsernameValidator:

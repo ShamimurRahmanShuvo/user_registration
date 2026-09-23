@@ -1,7 +1,8 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from uuid import UUID
 
 import pytest
+
 from user_registration import User
 
 
@@ -18,8 +19,8 @@ def test_user_create() -> None:
     assert user.password_hash == "hashed_password"
     assert isinstance(user.created_at, datetime)
     assert isinstance(user.updated_at, datetime)
-    assert user.created_at.tzinfo == timezone.utc
-    assert user.updated_at.tzinfo == timezone.utc
+    assert user.created_at.tzinfo == UTC
+    assert user.updated_at.tzinfo == UTC
     assert user.is_active is True
 
     # created and updated time is initially equal
@@ -97,7 +98,7 @@ def test_user_activate() -> None:
         email="test@test.ca",
         password_hash="hashed_password"
     )
-    inactive_user = user.deactivate()
+
     active_user = user.activate()
 
     assert active_user.is_active is True

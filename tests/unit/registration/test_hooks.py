@@ -1,13 +1,13 @@
 from __future__ import annotations
 
+from tests.fakes import InMemoryUserRepository
 from user_registration import (
     Argon2Hasher,
     PasswordValidatorAdapter,
     RegistrationRequest,
     RegistrationService,
-    User
+    User,
 )
-from tests.fakes import InMemoryUserRepository
 
 
 class RecordingRegistrationHook:

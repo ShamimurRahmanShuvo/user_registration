@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from password_validator import PasswordValidator
 from password_validator.models import ValidationResult
+
 from user_registration.password import PasswordPolicyValidator, PasswordValidatorAdapter
 
 

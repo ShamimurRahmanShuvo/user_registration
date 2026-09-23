@@ -1,9 +1,8 @@
+from tests.fakes import InMemoryUserRepository
 from user_registration.config import RegistrationConfig
 from user_registration.models import RegistrationRequest
 from user_registration.password import Argon2Hasher, PasswordValidatorAdapter
 from user_registration.registration import RegistrationService
-
-from tests.fakes import InMemoryUserRepository
 
 
 def create_service(
