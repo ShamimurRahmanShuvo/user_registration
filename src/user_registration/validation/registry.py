@@ -1,6 +1,7 @@
 """
 Validator registry foundation.
 """
+
 from __future__ import annotations
 
 from dataclasses import dataclass, field
@@ -14,6 +15,7 @@ class ValidationRegistry:
     Registry for field validators.
     Applications can replace or extend validators without modifying RegistrationService
     """
+
     _validators: dict[str, list[FieldValidator]] = field(default_factory=dict)
 
     def register(self, field_name: str, validator: FieldValidator) -> None:

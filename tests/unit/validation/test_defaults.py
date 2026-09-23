@@ -11,7 +11,9 @@ def test_default_registry_contains_username_validator() -> None:
 
     errors = registry.validate("username", "ab")
 
-    assert errors == ["Username must contain atleast 4 characters",]
+    assert errors == [
+        "Username must contain atleast 4 characters",
+    ]
 
 
 def test_default_registry_contains_email_validator() -> None:
@@ -21,7 +23,9 @@ def test_default_registry_contains_email_validator() -> None:
 
     errors = registry.validate("email", "invalid")
 
-    assert errors == ["Email address is invalid",]
+    assert errors == [
+        "Email address is invalid",
+    ]
 
 
 def test_default_registry_uses_configured_username_limits() -> None:
@@ -34,4 +38,6 @@ def test_default_registry_uses_configured_username_limits() -> None:
 
     errors = registry.validate("username", "abcd")
 
-    assert errors == ["Username must contain atleast 5 characters",]
+    assert errors == [
+        "Username must contain atleast 5 characters",
+    ]

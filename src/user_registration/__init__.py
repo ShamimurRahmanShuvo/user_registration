@@ -1,4 +1,5 @@
 """Public API for the user-registration package."""
+
 from user_registration.config import (
     ConfigurationError,
     RegistrationConfig,
@@ -73,5 +74,5 @@ __all__ = [
     "EmailValidator",
     "ValidationRegistry",
     "create_default_validation_registry",
-    "generate_token"
+    "generate_token",
 ]

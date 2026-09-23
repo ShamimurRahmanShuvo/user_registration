@@ -9,5 +9,5 @@ __all__ = [
     "RegistrationError",
     "RegistrationHookError",
     "RegistrationPersistenceError",
-    "UserAlreadyExistsError"
+    "UserAlreadyExistsError",
 ]

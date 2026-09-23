@@ -7,5 +7,5 @@ from user_registration.repository.base import (
 __all__ = [
     "DuplicateUserError",
     "RepositoryError",
-    "UserRepository"
+    "UserRepository",
 ]

@@ -1,6 +1,7 @@
 """
 Registration exception hierarchy foundation.
 """
+
 from __future__ import annotations
 
 

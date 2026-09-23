@@ -1,6 +1,7 @@
 """
 Registration service foundation.
 """
+
 from __future__ import annotations
 
 from password_validator.models import ValidationResult
@@ -24,21 +25,25 @@ class RegistrationService:
     The service is independent of web frameworks, databases,
     ORMs, and authentication/session mechanism.
     """
-    def __init__(self, *,
-                 repository: UserRepository,
-                 password_hasher: PasswordHasher,
-                 password_validator: PasswordPolicyValidator,
-                 config: RegistrationConfig | None = None,
-                 validation_registry: ValidationRegistry | None = None,
-                 hooks: tuple[RegistrationHook, ...] = ()
-                 ) -> None:
+
+    def __init__(
+        self,
+        *,
+        repository: UserRepository,
+        password_hasher: PasswordHasher,
+        password_validator: PasswordPolicyValidator,
+        config: RegistrationConfig | None = None,
+        validation_registry: ValidationRegistry | None = None,
+        hooks: tuple[RegistrationHook, ...] = (),
+    ) -> None:
         self._repository = repository
         self._password_hasher = password_hasher
         self._password_validator = password_validator
         self._config = config or RegistrationConfig()
 
         self._validation_registry = (
-            validation_registry if validation_registry is not None
+            validation_registry
+            if validation_registry is not None
             else create_default_validation_registry(self._config)
         )
         self._hooks = hooks
@@ -65,10 +70,7 @@ class RegistrationService:
         username = self._normalize_username(request.username)
         email = self._normalize_email(request.email)
 
-        validation_errors = self._validate_fields(
-            username=username,
-            email=email
-        )
+        validation_errors = self._validate_fields(username=username, email=email)
 
         if validation_errors:
             return RegistrationResult.validation_failed(*validation_errors)
@@ -149,14 +151,16 @@ class RegistrationService:
         if self._config.username_required:
             errors.extend(
                 self._validation_registry.validate(
-                    "username", username,
+                    "username",
+                    username,
                 )
             )
 
         if self._config.email_required:
             errors.extend(
                 self._validation_registry.validate(
-                    "email", email,
+                    "email",
+                    email,
                 )
             )
 
@@ -165,8 +169,9 @@ class RegistrationService:
     def _check_duplicates(self, *, username: str, email: str) -> list[str]:
         errors: list[str] = []
 
-        if self._config.username_required \
-                and self._repository.exists_by_username(username):
+        if self._config.username_required and self._repository.exists_by_username(
+            username
+        ):
             errors.append("Username is already registered")
 
         if self._config.email_required and self._repository.exists_by_email(email):
@@ -188,4 +193,3 @@ class RegistrationService:
     def _execute_hooks(self, user: User) -> None:
         for hook in self._hooks:
             hook.after_registration(user)
-

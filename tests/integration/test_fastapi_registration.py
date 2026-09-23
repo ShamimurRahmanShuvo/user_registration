@@ -28,9 +28,7 @@ def create_app() -> FastAPI:
     def override_service() -> RegistrationService:
         return service
 
-    app.dependency_overrides[
-        get_registration_service
-    ] = override_service
+    app.dependency_overrides[get_registration_service] = override_service
 
     app.include_router(router)
 
@@ -102,9 +100,7 @@ def test_invalid_username_returns_validation_error() -> None:
 
     body = response.json()
 
-    assert "Username must contain atleast 4 characters" in (
-        body["detail"]
-    )
+    assert "Username must contain atleast 4 characters" in (body["detail"])
 
 
 def test_invalid_email_returns_unprocessable_entity() -> None:

@@ -8,9 +8,7 @@ from user_registration import User
 
 def test_user_create() -> None:
     user = User.create(
-        username="testname",
-        email="test@test.ca",
-        password_hash="hashed_password"
+        username="testname", email="test@test.ca", password_hash="hashed_password"
     )
 
     assert isinstance(user.id, UUID)
@@ -28,25 +26,15 @@ def test_user_create() -> None:
 
 
 def test_user_id_is_unique() -> None:
-    user1 = User.create(
-        username="user1",
-        email="user1@test.ca",
-        password_hash="hash1"
-    )
-    user2 = User.create(
-        username="user2",
-        email="user2@test.ca",
-        password_hash="hash2"
-    )
+    user1 = User.create(username="user1", email="user1@test.ca", password_hash="hash1")
+    user2 = User.create(username="user2", email="user2@test.ca", password_hash="hash2")
 
     assert user1.id != user2.id
 
 
 def test_user_is_immutable() -> None:
     user = User.create(
-        username="testname",
-        email="test@test.ca",
-        password_hash="hashed_password"
+        username="testname", email="test@test.ca", password_hash="hashed_password"
     )
     with pytest.raises(AttributeError):
         user.username = "new-name"
@@ -57,9 +45,7 @@ def test_user_is_immutable() -> None:
 
 def test_user_deactivate() -> None:
     user = User.create(
-        username="testname",
-        email="test@test.ca",
-        password_hash="hashed_password"
+        username="testname", email="test@test.ca", password_hash="hashed_password"
     )
     deactivated = user.deactivate()
     assert deactivated.is_active is False
@@ -72,9 +58,7 @@ def test_user_deactivate() -> None:
 
 def test_deactivated_does_not_mutate_original_user() -> None:
     user = User.create(
-        username="testname",
-        email="test@test.ca",
-        password_hash="hashed_password"
+        username="testname", email="test@test.ca", password_hash="hashed_password"
     )
     deactivate = user.deactivate()
     assert user.is_active is True
@@ -83,9 +67,7 @@ def test_deactivated_does_not_mutate_original_user() -> None:
 
 def test_deactivate_already_inactive_user_returns_same_instance() -> None:
     user = User.create(
-        username="testname",
-        email="test@test.ca",
-        password_hash="hashed_password"
+        username="testname", email="test@test.ca", password_hash="hashed_password"
     )
     deactivated = user.deactivate()
     deactivated_again = deactivated.deactivate()
@@ -94,9 +76,7 @@ def test_deactivate_already_inactive_user_returns_same_instance() -> None:
 
 def test_user_activate() -> None:
     user = User.create(
-        username="testname",
-        email="test@test.ca",
-        password_hash="hashed_password"
+        username="testname", email="test@test.ca", password_hash="hashed_password"
     )
 
     active_user = user.activate()
@@ -111,9 +91,7 @@ def test_user_activate() -> None:
 
 def test_activate_already_active_user_returns_same_instance() -> None:
     user = User.create(
-        username="testname",
-        email="test@test.ca",
-        password_hash="hashed_password"
+        username="testname", email="test@test.ca", password_hash="hashed_password"
     )
     activated = user.activate()
 
@@ -124,9 +102,7 @@ def test_user_stores_password_hash_not_plaintext_password() -> None:
     password_hash = "$argon2id$v=19$example-hash"
 
     user = User.create(
-        username="test",
-        email="test@example.com",
-        password_hash=password_hash,
+        username="test", email="test@example.com", password_hash=password_hash
     )
 
     assert user.password_hash == password_hash

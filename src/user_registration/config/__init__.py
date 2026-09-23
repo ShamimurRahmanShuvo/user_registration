@@ -2,5 +2,5 @@ from user_registration.config.settings import ConfigurationError, RegistrationCo
 
 __all__ = [
     "ConfigurationError",
-    "RegistrationConfig"
+    "RegistrationConfig",
 ]

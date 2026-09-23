@@ -9,5 +9,5 @@ __all__ = [
     "Argon2Hasher",
     "PasswordHasher",
     "PasswordPolicyValidator",
-    "PasswordValidatorAdapter"
+    "PasswordValidatorAdapter",
 ]

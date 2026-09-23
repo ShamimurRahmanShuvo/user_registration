@@ -36,7 +36,7 @@ def user() -> User:
         password_hash="$argon2id$v=19$test-hash",
         created_at=now,
         updated_at=now,
-        is_active=True
+        is_active=True,
     )
 
 
@@ -121,7 +121,7 @@ def test_update_user(repository: SQLAlchemyUserRepository, user: User) -> None:
 
 
 def test_update_missing_user_raises_key_error(
-        repository: SQLAlchemyUserRepository
+    repository: SQLAlchemyUserRepository,
 ) -> None:
     user = User.create(
         username="missing",
@@ -142,7 +142,7 @@ def test_delete_user(repository: SQLAlchemyUserRepository, user: User) -> None:
 
 
 def test_delete_missing_user_returns_false(
-        repository: SQLAlchemyUserRepository
+    repository: SQLAlchemyUserRepository,
 ) -> None:
     deleted = repository.delete(uuid4())
 
@@ -150,7 +150,7 @@ def test_delete_missing_user_returns_false(
 
 
 def test_duplicate_username_and_email_raises_duplicate_user_error(
-        repository: SQLAlchemyUserRepository, user: User
+    repository: SQLAlchemyUserRepository, user: User
 ) -> None:
     repository.create(user)
 

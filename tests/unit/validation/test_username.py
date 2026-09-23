@@ -27,10 +27,7 @@ def test_username_rejects_invalid_characters() -> None:
 
 
 def test_custom_username_limits() -> None:
-    validator = UsernameValidator(
-        min_length=5,
-        max_length=10
-    )
+    validator = UsernameValidator(min_length=5, max_length=10)
 
     assert validator.validate("testUser") is None
     assert validator.validate("abc") is not None

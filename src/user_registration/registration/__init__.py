@@ -7,5 +7,5 @@ __all__ = [
     "RegistrationHook",
     "RegistrationResult",
     "RegistrationStatus",
-    "RegistrationService"
+    "RegistrationService",
 ]

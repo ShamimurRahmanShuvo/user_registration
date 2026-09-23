@@ -1,6 +1,7 @@
 """
 Registration request model foundation.
 """
+
 from dataclasses import dataclass
 
 
@@ -12,6 +13,7 @@ class RegistrationRequest:
     It must never be persisted directly.
     Password hashing is handled by the password hashing abstraction.
     """
+
     username: str | None
     email: str | None
     password: str | None

@@ -1,6 +1,7 @@
 """
 Persistence abstraction.
 """
+
 from __future__ import annotations
 
 from typing import Protocol, runtime_checkable
@@ -26,6 +27,7 @@ class UserRepository(Protocol):
     - MySQL     - SQLite    - in-memory storage     - custom storage systems
     The core user-registration package doesn't depend on any of them
     """
+
     def create(self, user: User) -> User:
         """
         Persists a new user.

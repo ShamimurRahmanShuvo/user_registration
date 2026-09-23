@@ -12,6 +12,7 @@ class PasswordPolicyValidator(Protocol):
     Contract for password policy validation.
     This abstraction intentionally does not know how passwords are hashed or persisted.
     """
+
     def validate(self, password: str) -> ValidationResult:
         """
         Return True when the password satisfies the configured policy
@@ -25,6 +26,7 @@ class PasswordValidatorAdapter:
     The adapter prevents the rest of user-registration from being tightly
     coupled to the third-party password validation implementation.
     """
+
     def __init__(self, validator: PasswordValidator | None = None) -> None:
         self._validator = validator or PasswordValidator()
 
