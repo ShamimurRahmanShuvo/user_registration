@@ -6,7 +6,9 @@ from user_registration.validation.registry import ValidationRegistry
 from user_registration.validation.username import UsernameValidator
 
 
-def create_default_validation_registry(config: RegistrationConfig) -> ValidationRegistry:
+def create_default_validation_registry(
+        config: RegistrationConfig
+) -> ValidationRegistry:
     """
     Create the default validation registry for the package.
 

@@ -1,61 +1,47 @@
-# user-registration
+# User Registration
 
-A framework-agnostic and extensible Python package for user registration.
+A framework-agnostic and database-agnostic user registration package for Python applications.
 
-The package is designed to provide a reusable registration domain/service layer
-without coupling the application to a specific web framework or database.
+`user-registration` provides the domain and application layer for registering users while keeping framework and persistence concerns outside the core package.
 
-## Planned responsibilities
+## Features
 
-- Basic user registration
-- Username and email validation
-- Password validation through `password-validator-s`
-- Secure password hashing
-- Repository abstraction for persistence
-- Custom registration fields and validators
-- Registration lifecycle hooks
+- Python 3.12+
+- Typed Python API
+- Framework independent
+- Database independent
+- Configurable registration behavior
+- Username validation
+- Email validation
+- Extensible validation registry
+- Password policy integration
+- Argon2 password hashing
+- Repository abstraction
+- Custom repository implementations
+- Registration hooks
+- Duplicate-user detection
+- FastAPI adapter
+- SQLAlchemy adapter
+- Unit and integration tests
+- Static type checking with mypy
+- Linting and formatting with Ruff
 
-## Explicitly out of scope
+## Architecture
 
-- Login/authentication
-- JWT/session management
-- OAuth
-- Authorization/RBAC
-- Password reset
-- MFA
-- Email/SMS delivery
-- Framework-specific routing
-- Database-specific ORM models
+The core package does not depend on FastAPI, Django, Flask, SQLAlchemy, PostgreSQL, MongoDB, or any other infrastructure technology.
 
-## Development
-
-Create a virtual environment and install the project with development dependencies:
-
-```bash
-python -m venv .venv
-source .venv/bin/activate
-python -m pip install --upgrade pip
-python -m pip install -e ".[dev]"
-```
-
-Run tests:
-
-```bash
-pytest
-```
-
-Run linting:
-
-```bash
-ruff check .
-```
-
-Run type checking:
-
-```bash
-mypy src
-```
-
-## Status
-
-Phase 0 and Phase 1: package contract and project foundation.
+```text
+                       Application
+                            |
+                            v
+                  +--------------------+
+                  | RegistrationService|
+                  +---------+----------+
+                            |
+          +-----------------+------------------+
+          |                 |                  |
+          v                 v                  v
+   ValidationRegistry  PasswordHasher   UserRepository
+                            |
+                            v
+                         Argon2

@@ -1,10 +1,9 @@
 from user_registration.exceptions.registration import (
     RegistrationError,
-    UserAlreadyExistsError,
+    RegistrationHookError,
     RegistrationPersistenceError,
-    RegistrationHookError
+    UserAlreadyExistsError,
 )
-
 
 __all__ = [
     "RegistrationError",

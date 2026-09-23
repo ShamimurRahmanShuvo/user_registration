@@ -1,5 +1,7 @@
 from __future__ import annotations
+
 from typing import Protocol, runtime_checkable
+
 from password_validator import PasswordValidator
 from password_validator.models import ValidationResult
 
@@ -10,7 +12,7 @@ class PasswordPolicyValidator(Protocol):
     Contract for password policy validation.
     This abstraction intentionally does not know how passwords are hashed or persisted.
     """
-    def validate(self, password: str) -> object:
+    def validate(self, password: str) -> ValidationResult:
         """
         Return True when the password satisfies the configured policy
         """

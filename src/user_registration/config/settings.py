@@ -4,8 +4,9 @@ Configuration foundation.
 from __future__ import annotations
 
 import os
+from collections.abc import Mapping
 from dataclasses import dataclass
-from typing import Any, ClassVar, Mapping
+from typing import Any, ClassVar
 
 
 class ConfigurationError(ValueError):
@@ -30,7 +31,8 @@ def _parse_bool(value: str, name: str) -> bool:
         return False
 
     raise ConfigurationError(
-        f"{name} must be a boolean value (true/false, 1/0, yes/no, on/off); got {value!r}"
+        f"{name} must be a boolean value (true/false, 1/0, yes/no, on/off); "
+        f"got {value!r}"
     )
 
 
@@ -50,7 +52,8 @@ def _parse_int(value: str, name: str) -> int:
 class RegistrationConfig:
     """
     Configuration for the user registration workflow.
-    Password policy configuration doesn't belong here as it is delegated to the password-validator-s package.
+    Password policy configuration doesn't belong here as
+    it is delegated to the password-validator-s package.
     """
     username_min_length: int = 4
     username_max_length: int = 50
@@ -87,7 +90,8 @@ class RegistrationConfig:
             )
         if self.username_max_length < self.username_min_length:
             raise ConfigurationError(
-                "username_max_length must be greater than or equal to username_min_length"
+                "username_max_length must be greater than or "
+                "equal to username_min_length"
             )
         
     @classmethod
@@ -99,7 +103,8 @@ class RegistrationConfig:
         Returns: 
             RegistrationConfig
         Raises:
-            ConfigurationError: If an environment value cann't be parsed or the resulting configuration is invalid
+            ConfigurationError: If an environment value cann't be
+            parsed or the resulting configuration is invalid
         """
         source = os.environ if environ is None else environ
         prefix = cls.ENV_PREFIX

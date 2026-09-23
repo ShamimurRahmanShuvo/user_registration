@@ -1,36 +1,36 @@
 """Public API for the user-registration package."""
 from user_registration.config import (
     ConfigurationError,
-    RegistrationConfig
+    RegistrationConfig,
 )
 from user_registration.exceptions import (
     RegistrationError,
     RegistrationHookError,
     RegistrationPersistenceError,
-    UserAlreadyExistsError
+    UserAlreadyExistsError,
 )
 from user_registration.models import (
     RegistrationRequest,
-    User
+    User,
 )
 from user_registration.password import (
     Argon2Config,
     Argon2Hasher,
     PasswordHasher,
     PasswordPolicyValidator,
-    PasswordValidatorAdapter
+    PasswordValidatorAdapter,
 )
 from user_registration.registration import (
     NoOpRegistrationHook,
     RegistrationHook,
     RegistrationResult,
     RegistrationService,
-    RegistrationStatus
+    RegistrationStatus,
 )
 from user_registration.repository import (
     DuplicateUserError,
     RepositoryError,
-    UserRepository
+    UserRepository,
 )
 from user_registration.security import generate_token
 from user_registration.validation import (
@@ -39,9 +39,8 @@ from user_registration.validation import (
     UsernameValidator,
     ValidationError,
     ValidationRegistry,
-    create_default_validation_registry
+    create_default_validation_registry,
 )
-
 
 __version__ = "0.1.0"
 
@@ -55,6 +54,7 @@ __all__ = [
     "RepositoryError",
     "DuplicateUserError",
     "PasswordHasher",
+    "Argon2Config",
     "Argon2Hasher",
     "PasswordPolicyValidator",
     "PasswordValidatorAdapter",

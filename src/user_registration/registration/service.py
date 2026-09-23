@@ -12,13 +12,17 @@ from user_registration.password import PasswordHasher, PasswordPolicyValidator
 from user_registration.registration.hooks import RegistrationHook
 from user_registration.registration.result import RegistrationResult
 from user_registration.repository import DuplicateUserError, UserRepository
-from user_registration.validation import ValidationRegistry, create_default_validation_registry
+from user_registration.validation import (
+    ValidationRegistry,
+    create_default_validation_registry,
+)
 
 
 class RegistrationService:
     """
     Coordinates the user registration workflow.
-    The service is independent of web frameworks, databases, ORMs, and authentication/session mechanism.
+    The service is independent of web frameworks, databases,
+    ORMs, and authentication/session mechanism.
     """
     def __init__(self, *,
                  repository: UserRepository,
@@ -82,7 +86,9 @@ class RegistrationService:
         password_result = self._password_validator.validate(request.password)
 
         if not password_result.valid:
-            return RegistrationResult.validation_failed(*self._password_errors(password_result))
+            return RegistrationResult.validation_failed(
+                *self._password_errors(password_result)
+            )
 
         password_hash = self._password_hasher.hash(request.password)
 
@@ -159,7 +165,8 @@ class RegistrationService:
     def _check_duplicates(self, *, username: str, email: str) -> list[str]:
         errors: list[str] = []
 
-        if self._config.username_required and self._repository.exists_by_username(username):
+        if self._config.username_required \
+                and self._repository.exists_by_username(username):
             errors.append("Username is already registered")
 
         if self._config.email_required and self._repository.exists_by_email(email):

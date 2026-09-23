@@ -61,8 +61,8 @@ class Argon2Config:
 class Argon2Hasher:
     """
     Argon2id-based password hasher.
-    Argon2id is designed specifically for password hashing and provides resistance against GPU-based password
-    cracking attacks.
+    Argon2id is designed specifically for password hashing and provides
+    resistance against GPU-based password cracking attacks.
     """
     def __init__(self, config: Argon2Config | None=None) -> None:
         actual_config = config or Argon2Config()
@@ -77,7 +77,8 @@ class Argon2Hasher:
     def hash(self, password: str) -> str:
         """
         Hash a plaintext password.
-        The returned value contains the Argon2 parameters and salt needed for future verification.
+        The returned value contains the Argon2 parameters
+        and salt needed for future verification.
         """
         if not password:
             raise ValueError("Password must not be empty")
