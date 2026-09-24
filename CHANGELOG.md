@@ -1,8 +1,7 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.
-
-## [0.1.0] - 2026-09-21
+## [0.1.0] - 2026-09-23
+Initial alpha release
 
 ### Added
 
@@ -30,3 +29,8 @@ All notable changes to this project will be documented in this file.
 - mypy configuration
 - Ruff configuration
 - Package build configuration
+
+
+### Scope
+
+The core intentionally excludes login, sessions, JWT, OAuth, MFA, RBAC, password reset, and framework-specific routing.

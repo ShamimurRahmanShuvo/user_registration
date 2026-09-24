@@ -1,23 +1,37 @@
 # Repositories
 
-## UserRepository
+The repository abstraction isolates persistence from registration logic.
 
-The core package defines the persistence contract:
+Required operations:
+
+```text
+create
+get_by_id
+get_by_username
+get_by_email
+exists_by_username
+exists_by_email
+update
+delete
+```
+
+Database repositories should enforce unique constraints for username and email.
+
+Persistence uniqueness failures should be translated to:
 
 ```python
-class UserRepository(Protocol):
-    def create(self, user: User) -> User: ...
+DuplicateUserError
+```
 
-    def get_by_id(self, user_id: UUID) -> User | None: ...
+The application owns transactions:
 
-    def get_by_username(self, username: str) -> User | None: ...
+```text
+begin
+  -> register
+  -> commit / rollback
+  -> close
+```
 
-    def get_by_email(self, email: str) -> User | None: ...
+The core does not assume SQLAlchemy or any specific database.
 
-    def exists_by_username(self, username: str) -> bool: ...
-
-    def exists_by_email(self, email: str) -> bool: ...
-
-    def update(self, user: User) -> User: ...
-
-    def delete(self, user_id: UUID) -> bool: ...
+The SQLAlchemy implementation is provided by `user-registration-sqlalchemy`.
