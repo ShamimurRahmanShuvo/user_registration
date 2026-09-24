@@ -1,13 +1,13 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from uuid import uuid4
 
 import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
+from user_registration_sqlalchemy import Base, SQLAlchemyUserRepository
 
 from user_registration import User
 from user_registration.repository import DuplicateUserError
-from user_registration_sqlalchemy import Base, SQLAlchemyUserRepository
 
 
 @pytest.fixture
@@ -27,7 +27,7 @@ def repository(session: Session) -> SQLAlchemyUserRepository:
 
 @pytest.fixture
 def user() -> User:
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
 
     return User(
         id=uuid4(),
@@ -36,7 +36,7 @@ def user() -> User:
         password_hash="$argon2id$v=19$test-hash",
         created_at=now,
         updated_at=now,
-        is_active=True
+        is_active=True,
     )
 
 
@@ -99,7 +99,7 @@ def test_update_user(repository: SQLAlchemyUserRepository, user: User) -> None:
         email="updated@example.com",
         password_hash="updated-hash",
         created_at=user.created_at,
-        updated_at=datetime.now(timezone.utc),
+        updated_at=datetime.now(UTC),
         is_active=False,
     )
 
@@ -120,7 +120,9 @@ def test_update_user(repository: SQLAlchemyUserRepository, user: User) -> None:
     assert found.is_active is False
 
 
-def test_update_missing_user_raises_key_error(repository: SQLAlchemyUserRepository) -> None:
+def test_update_missing_user_raises_key_error(
+    repository: SQLAlchemyUserRepository,
+) -> None:
     user = User.create(
         username="missing",
         email="missing@example.com",
@@ -139,14 +141,16 @@ def test_delete_user(repository: SQLAlchemyUserRepository, user: User) -> None:
     assert repository.get_by_id(user.id) is None
 
 
-def test_delete_missing_user_returns_false(repository: SQLAlchemyUserRepository) -> None:
+def test_delete_missing_user_returns_false(
+    repository: SQLAlchemyUserRepository,
+) -> None:
     deleted = repository.delete(uuid4())
 
     assert deleted is False
 
 
 def test_duplicate_username_and_email_raises_duplicate_user_error(
-        repository: SQLAlchemyUserRepository, user: User
+    repository: SQLAlchemyUserRepository, user: User
 ) -> None:
     repository.create(user)
 

@@ -1,61 +1,122 @@
-# user-registration
+# User Registration
 
-A framework-agnostic and extensible Python package for user registration.
+A framework-agnostic and database-agnostic user registration package for Python applications.
 
-The package is designed to provide a reusable registration domain/service layer
-without coupling the application to a specific web framework or database.
+`user-registration` provides the domain and application layer for registering users while keeping framework and persistence concerns outside the core package.
 
-## Planned responsibilities
+## Features
 
-- Basic user registration
-- Username and email validation
-- Password validation through `password-validator-s`
-- Secure password hashing
-- Repository abstraction for persistence
-- Custom registration fields and validators
-- Registration lifecycle hooks
+- Python 3.12+
+- Typed Python API
+- Framework independent
+- Database independent
+- Configurable registration behavior
+- Username validation
+- Email validation
+- Extensible validation registry
+- Password policy integration via `password-validator-s`
+- Argon2 password hashing
+- Repository abstraction
+- Custom repository implementations
+- Registration hooks
+- Duplicate-user detection
+- FastAPI adapter
+- SQLAlchemy adapter
+- Unit and integration tests
+- Static type checking with mypy
+- Linting and formatting with Ruff
 
-## Explicitly out of scope
+### Core flow
 
-- Login/authentication
-- JWT/session management
-- OAuth
-- Authorization/RBAC
-- Password reset
-- MFA
-- Email/SMS delivery
-- Framework-specific routing
-- Database-specific ORM models
-
-## Development
-
-Create a virtual environment and install the project with development dependencies:
-
-```bash
-python -m venv .venv
-source .venv/bin/activate
-python -m pip install --upgrade pip
-python -m pip install -e ".[dev]"
+```text
+            RegistrationRequest
+                 |
+                 v
+            RegistrationService
+ +--------------------------------+
+  |      |          |         |
+  v      v          v         v
+fields validation password repository
+                   policy
+                     |
+                     v
+                  hashing
+                     |
+                     v
+                    User
 ```
 
-Run tests:
+## Architecture
 
-```bash
-pytest
+The core package does not depend on FastAPI, Django, Flask, SQLAlchemy, PostgreSQL, MongoDB, or any other infrastructure technology.
+
+```text
+                       Application
+                            |
+                            v
+                  +--------------------+
+                  | RegistrationService|
+                  +---------+----------+
+                            |
+          +-----------------+------------------+
+          |                 |                  |
+          v                 v                  v
+   ValidationRegistry  PasswordHasher   UserRepository
+                            |
+                            v
+                         Argon2
 ```
 
-Run linting:
+### Basic usage
 
-```bash
-ruff check .
+```python
+from user_registration import (
+    Argon2Hasher,
+    PasswordValidatorAdapter,
+    RegistrationConfig,
+    RegistrationRequest,
+    RegistrationService,
+)
+
+service = RegistrationService(
+    repository=repository,
+    password_hasher=Argon2Hasher(),
+    password_validator=PasswordValidatorAdapter(),
+    config=RegistrationConfig(),
+)
+
+result = service.register(
+    RegistrationRequest(
+        username="shuvo",
+        email="shuvo@example.com",
+        password="StrongPassword123!",
+    )
+)
+
+if result.success:
+    print(result.user_id)
+else:
+    print(result.status, result.errors)
 ```
 
-Run type checking:
+The application supplies the repository implementation.
+
+### Explicitly out of scope
+
+The core does not implement login, JWT, OAuth/OIDC, sessions, MFA, RBAC, password reset, email delivery, ORM models, database connections, or HTTP routing.
+
+### Development
 
 ```bash
-mypy src
+.venv/bin/python -m pytest -v
+.venv/bin/python -m mypy src
+.venv/bin/python -m ruff check src tests
+.venv/bin/python -m ruff format --check src tests
+.venv/bin/python -m build
 ```
 
-## Status
+## License
 
-Phase 0 and Phase 1: package contract and project foundation.
+MIT
+
+### Visit https://github.com/ShamimurRahmanShuvo/user_registration/tree/main/docs, for more details

@@ -4,8 +4,9 @@ from user_registration import ConfigurationError, RegistrationConfig
 
 
 def test_default_configuration() -> None:
+
     config = RegistrationConfig()
-    
+
     assert config.username_min_length == 4
     assert config.username_max_length == 50
     assert config.email_required is True
@@ -23,7 +24,7 @@ def test_customize_configuration() -> None:
         username_required=True,
         password_required=True,
         normalize_email=False,
-        normalize_username=False
+        normalize_username=False,
     )
 
     assert config.username_min_length == 5
@@ -58,17 +59,11 @@ def test_username_min_length_must_be_positive() -> None:
 
 def test_username_max_length_cannot_be_less_than_minimum() -> None:
     with pytest.raises(ConfigurationError, match="greater than or equal to"):
-        RegistrationConfig(
-            username_min_length=20,
-            username_max_length=10
-        )
+        RegistrationConfig(username_min_length=20, username_max_length=10)
 
 
 def test_username_lengths_can_be_equal() -> None:
-    config = RegistrationConfig(
-        username_min_length=10,
-        username_max_length=10
-    )
+    config = RegistrationConfig(username_min_length=10, username_max_length=10)
 
     assert config.username_min_length == 10
     assert config.username_max_length == 10
@@ -109,7 +104,7 @@ def test_from_env_reads_integer_and_boolean_values() -> None:
         ("YES", True),
         ("on", True),
         ("ON", True),
-    ]
+    ],
 )
 def test_from_env_boolean_formats(value: str, expected: bool) -> None:
     config = RegistrationConfig.from_env(
@@ -128,7 +123,10 @@ def test_from_env_uses_defaults_for_missing_variables() -> None:
 
 
 def test_from_env_rejects_invalid_integer() -> None:
-    with pytest.raises(ConfigurationError, match="USER_REGISTRATION_USERNAME_MIN_LENGTH must be integer; got 'abc'"):
+    with pytest.raises(
+        ConfigurationError,
+        match="USER_REGISTRATION_USERNAME_MIN_LENGTH must be integer; got 'abc'",
+    ):
         RegistrationConfig.from_env(
             {
                 "USER_REGISTRATION_USERNAME_MIN_LENGTH": "abc",
@@ -137,7 +135,10 @@ def test_from_env_rejects_invalid_integer() -> None:
 
 
 def test_from_env_rejects_empty_integer() -> None:
-    with pytest.raises(ConfigurationError, match="USER_REGISTRATION_USERNAME_MIN_LENGTH must be integer; got ''"):
+    with pytest.raises(
+        ConfigurationError,
+        match="USER_REGISTRATION_USERNAME_MIN_LENGTH must be integer; got ''",
+    ):
         RegistrationConfig.from_env(
             {
                 "USER_REGISTRATION_USERNAME_MIN_LENGTH": "",

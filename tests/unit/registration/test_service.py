@@ -1,16 +1,15 @@
 from __future__ import annotations
 
+from tests.fakes import InMemoryUserRepository
 from user_registration.config import RegistrationConfig
 from user_registration.models import RegistrationRequest
 from user_registration.password import Argon2Hasher, PasswordValidatorAdapter
 from user_registration.registration import RegistrationService
+from user_registration.repository import DuplicateUserError
 from user_registration.validation import (
     ValidationRegistry,
     create_default_validation_registry,
 )
-from user_registration.repository import DuplicateUserError
-
-from tests.fakes import InMemoryUserRepository
 
 
 def create_service(

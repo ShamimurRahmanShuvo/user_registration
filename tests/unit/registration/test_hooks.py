@@ -1,13 +1,13 @@
 from __future__ import annotations
 
+from tests.fakes import InMemoryUserRepository
 from user_registration import (
     Argon2Hasher,
     PasswordValidatorAdapter,
     RegistrationRequest,
     RegistrationService,
-    User
+    User,
 )
-from tests.fakes import InMemoryUserRepository
 
 
 class RecordingRegistrationHook:
@@ -26,14 +26,12 @@ def test_registration_hook_runs_after_successful_registration() -> None:
         repository=repository,
         password_hasher=Argon2Hasher(),
         password_validator=PasswordValidatorAdapter(),
-        hooks=(hook,)
+        hooks=(hook,),
     )
 
     result = service.register(
         RegistrationRequest(
-            username="testUser",
-            email="test@example.ca",
-            password="StrongPassword123!"
+            username="testUser", email="test@example.ca", password="StrongPassword123!"
         )
     )
 
@@ -50,14 +48,12 @@ def test_registration_hook_doesnot_run_when_registration_fails() -> None:
         repository=repository,
         password_hasher=Argon2Hasher(),
         password_validator=PasswordValidatorAdapter(),
-        hooks=(hook,)
+        hooks=(hook,),
     )
 
     result = service.register(
         RegistrationRequest(
-            username="ab",
-            email="test@example.ca",
-            password="StrongPassword123!"
+            username="ab", email="test@example.ca", password="StrongPassword123!"
         )
     )
 

@@ -1,6 +1,7 @@
 """
 Registration result foundation.
 """
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -22,6 +23,7 @@ class RegistrationResult:
     Successful result contains newly created user's ID
     Failed validation returns errors without exposing sensitive data.
     """
+
     success: bool
     status: RegistrationStatus
     user_id: UUID | None = None
@@ -29,18 +31,14 @@ class RegistrationResult:
 
     @classmethod
     def successful(cls, user_id: UUID) -> RegistrationResult:
-        return cls(
-            success=True,
-            user_id=user_id,
-            status=RegistrationStatus.SUCCESS
-        )
+        return cls(success=True, user_id=user_id, status=RegistrationStatus.SUCCESS)
 
     @classmethod
     def validation_failed(cls, *errors: str) -> RegistrationResult:
         return cls(
             success=False,
             errors=tuple(errors),
-            status=RegistrationStatus.VALIDATION_ERROR
+            status=RegistrationStatus.VALIDATION_ERROR,
         )
 
     @classmethod
@@ -48,7 +46,7 @@ class RegistrationResult:
         return cls(
             success=False,
             status=RegistrationStatus.DUPLICATE,
-            errors=tuple(errors)
+            errors=tuple(errors),
         )
 
     @classmethod
@@ -56,5 +54,5 @@ class RegistrationResult:
         return cls(
             success=False,
             status=RegistrationStatus.PERSISTENCE_ERROR,
-            errors=tuple(errors)
+            errors=tuple(errors),
         )

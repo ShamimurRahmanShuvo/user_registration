@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 import pytest
 
 from user_registration.password import Argon2Hasher, PasswordHasher

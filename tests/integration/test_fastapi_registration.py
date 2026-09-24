@@ -1,16 +1,16 @@
+from uuid import UUID
+
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
+from user_registration_fastapi import get_registration_service, router
 
+from tests.fakes import InMemoryUserRepository
 from user_registration import (
     Argon2Hasher,
     PasswordValidatorAdapter,
     RegistrationConfig,
     RegistrationService,
 )
-
-from user_registration_fastapi import get_registration_service, router
-
-from tests.fakes import InMemoryUserRepository
 
 
 def create_app() -> FastAPI:
@@ -28,9 +28,7 @@ def create_app() -> FastAPI:
     def override_service() -> RegistrationService:
         return service
 
-    app.dependency_overrides[
-        get_registration_service
-    ] = override_service
+    app.dependency_overrides[get_registration_service] = override_service
 
     app.include_router(router)
 
@@ -102,9 +100,7 @@ def test_invalid_username_returns_validation_error() -> None:
 
     body = response.json()
 
-    assert "Username must contain atleast 4 characters" in (
-        body["detail"]
-    )
+    assert "Username must contain atleast 4 characters" in (body["detail"])
 
 
 def test_invalid_email_returns_unprocessable_entity() -> None:
@@ -229,9 +225,6 @@ def test_successful_registration_does_not_return_password() -> None:
     assert "password" not in response_body
     assert "password_hash" not in response_body
     assert password not in response.text
-
-
-from uuid import UUID
 
 
 def test_successful_registration_returns_user_id() -> None:

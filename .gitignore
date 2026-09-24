@@ -1,17 +1,37 @@
+# Python
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
-.env
+*.py[cod]
+*.so
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Testing
 .pytest_cache/
 .coverage
 htmlcov/
-dist/
+
+# Type checking
+.mypy_cache/
+
+# Ruff
+.ruff_cache/
+
+# Build
 build/
+dist/
 *.egg-info/
-.venv/
-venv/
+
+# IDE
 .idea/
 .vscode/
+
+# macOS
 .DS_Store
-.mypy_cache
+
+# Environment files
+.env
+.env.*
+!.env.example

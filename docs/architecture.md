@@ -1,110 +1,76 @@
 # Architecture
 
-## Architectural Goals
+`user-registration` uses dependency inversion and keeps infrastructure outside the core.
 
-The `user-registration` package is designed to be:
+```text
+Application
+    |
+    +--> FastAPI adapter (optional)
+    |
+    +--> SQLAlchemy adapter (optional)
+             |
+             v
+      RegistrationService
+       /       |       \
+      v        v        v
+Validation  Password  UserRepository
+Registry    Policy      Protocol
+              |
+              v
+      password-validator-s
+```
 
-- Framework-agnostic
-- Database-agnostic
-- Extensible
-- Typed
-- Testable
-- Suitable for production integration
-- Independent of application-specific infrastructure
+## Core layers
 
----
+### Domain
 
-## Configuration 
+`User` is a framework-independent domain object containing identity, password hash, timestamps, and active state.
 
-Configuration is represented by:
+### Application service
 
-RegistrationConfig
+`RegistrationService` coordinates:
 
-## Domain Model
+1. Required-field validation
+2. Normalization
+3. Field validation
+4. Duplicate checks
+5. Password policy validation
+6. Password hashing
+7. User creation
+8. Persistence
+9. Registration hooks
+10. Result creation
 
-Core registration domain object is represented by:
+### Repository
 
-RegistrationRequest
+`UserRepository` is a `Protocol`. Implementations can target an in-memory store, SQLAlchemy, PostgreSQL, Django ORM, MongoDB, or another persistence system.
 
-User
+### Password
 
-# Package boundary
+`PasswordHasher` is a protocol. `Argon2Hasher` is the default implementation.
 
-`user-registration` owns the registration workflow and the contracts required
-to validate and persist a user.
+### Validation
 
-It does not own authentication, authorization, sessions, JWTs, OAuth,
-password reset, MFA, email delivery, or a specific database/framework.
+`FieldValidator` and `ValidationRegistry` provide extensible field validation.
 
 ## Dependency direction
 
 ```text
-user-registration
-    |
-    +--> password-validator
-    |
-    +--> PasswordHasher abstraction
-    |
-    +--> UserRepository abstraction
+Adapters / infrastructure
+          |
+          v
+        Core
+          |
+          v
+      Protocols
 ```
 
-`password-validator-s` answers whether a password satisfies the configured
-password policy. The registration package will separately hash the accepted
-password before persistence.
+The core must not import FastAPI, SQLAlchemy, Django, or another infrastructure framework.
 
-```markdown
-# Repository Architecture
+## Transactions
 
-## Persistence Boundary
+The application owns transaction boundaries. Repositories flush or persist changes but should not decide the application's overall commit policy.
 
-The repository layer isolates persistence from the registration domain.
+## Error boundaries
 
-```text
-                    Registration Service
-                            |
-                            v
-                    +---------------+
-                    | UserRepository|
-                    |   Protocol    |
-                    +---------------+
-                            |
-              +-------------+-------------+
-              |             |             |
-              v             v             v
-         SQLAlchemy      Django       MongoDB
-          Adapter        Adapter       Adapter
-              |             |             |
-              +-------------+-------------+
-                            |
-                            v
-                        Database
-
-## Planned flow
-
-```text
-Registration request
-        |
-        v
-Normalization
-        |
-        v
-Basic field validation
-        |
-        v
-password-validator
-        |
-        v
-Duplicate checks
-        |
-        v
-PasswordHasher.hash()
-        |
-        v
-User domain object
-        |
-        v
-UserRepository.create()
-        |
-        v
-RegistrationResult
-```
+Expected business outcomes use `RegistrationResult`. Repository uniqueness failures use `DuplicateUserError`. Persistence failures can be represented by `RegistrationPersistenceError`. Hook failures use `RegistrationHookError`.

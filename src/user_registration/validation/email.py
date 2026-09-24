@@ -1,6 +1,7 @@
 """
 Email validation foundation.
 """
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -9,6 +10,7 @@ from dataclasses import dataclass
 @dataclass(frozen=True, slots=True)
 class EmailValidator:
     """Basic framework-independent email validation"""
+
     require_domain: bool = True
 
     def validate(self, value: str) -> str | None:

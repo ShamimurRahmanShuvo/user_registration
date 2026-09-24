@@ -1,6 +1,7 @@
 """
 Username validation foundation.
 """
+
 from __future__ import annotations
 
 import re
@@ -13,6 +14,7 @@ class UsernameValidator:
     Validates usernames independently from the registration service.
     The validator is configurable so applications can provide different username policy
     """
+
     min_length: int = 4
     max_length: int = 50
     pattern: str = r"^[a-zA-Z0-9_.-]+$"

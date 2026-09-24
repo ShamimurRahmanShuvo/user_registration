@@ -1,6 +1,7 @@
 """
 Password hashing abstraction.
 """
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -16,6 +17,7 @@ class PasswordHasher(Protocol):
     Abstraction for securely hashing and verifying passwords.
     Implementations must never expose or persist plaintext passwords.
     """
+
     def hash(self, password: str) -> str:
         """
         Return a secure password hash for the supplied plaintext password.
@@ -35,6 +37,7 @@ class Argon2Config:
     Argon2 password hashing configuration.
     The defaults coming from argon2-cffi's PasswordHasher
     """
+
     time_cost: int = 3
     memory_cost: int = 655536
     parallelism: int = 4
@@ -61,23 +64,25 @@ class Argon2Config:
 class Argon2Hasher:
     """
     Argon2id-based password hasher.
-    Argon2id is designed specifically for password hashing and provides resistance against GPU-based password
-    cracking attacks.
+    Argon2id is designed specifically for password hashing and provides
+    resistance against GPU-based password cracking attacks.
     """
-    def __init__(self, config: Argon2Config | None=None) -> None:
+
+    def __init__(self, config: Argon2Config | None = None) -> None:
         actual_config = config or Argon2Config()
         self._hasher = Argon2PasswordHasher(
             time_cost=actual_config.time_cost,
             memory_cost=actual_config.memory_cost,
             parallelism=actual_config.parallelism,
             hash_len=actual_config.hash_len,
-            salt_len=actual_config.salt_len
+            salt_len=actual_config.salt_len,
         )
 
     def hash(self, password: str) -> str:
         """
         Hash a plaintext password.
-        The returned value contains the Argon2 parameters and salt needed for future verification.
+        The returned value contains the Argon2 parameters
+        and salt needed for future verification.
         """
         if not password:
             raise ValueError("Password must not be empty")

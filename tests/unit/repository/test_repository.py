@@ -13,6 +13,7 @@ class InMemoryUserRepository:
     It demonstrates that an implementation does not need to inherit from
     UserRepository as long as it satisfies the protocol.
     """
+
     def __init__(self) -> None:
         self._users: dict[UUID, User] = {}
 
@@ -180,9 +181,7 @@ def test_update_nonexistent_user_raises_key_error() -> None:
     except KeyError as exc:
         assert str(user.id) in str(exc)
     else:
-        raise AssertionError(
-            "Expected KeyError when updating a nonexistent user"
-        )
+        raise AssertionError("Expected KeyError when updating a nonexistent user")
 
 
 def test_delete_user() -> None:

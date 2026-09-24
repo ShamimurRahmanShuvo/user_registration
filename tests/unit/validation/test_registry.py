@@ -1,4 +1,4 @@
-from user_registration.validation import ValidationRegistry, UsernameValidator
+from user_registration.validation import UsernameValidator, ValidationRegistry
 
 
 class ReservedUsernameValidator:
@@ -15,10 +15,7 @@ class MinimumUsernameValidator:
 
     def validate(self, value: str) -> str | None:
         if len(value) < self.minimum:
-            return (
-                f"Username must contain at least "
-                f"{self.minimum} characters"
-            )
+            return f"Username must contain at least {self.minimum} characters"
 
         return None
 
