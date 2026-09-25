@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.1.2] - 2026-09-25
+Release with ruff fix for adapters and add Adapters documentation.
+
 ## [0.1.1] - 2026-09-25
 Initial alpha release with fix GitHub actions workflow
 
