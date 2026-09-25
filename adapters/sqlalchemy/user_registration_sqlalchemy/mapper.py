@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from user_registration.models import User
-
 from user_registration_sqlalchemy.models import UserModel
 
 
@@ -13,7 +12,7 @@ def to_domain(model: UserModel) -> User:
         password_hash=model.password_hash,
         created_at=model.created_at,
         updated_at=model.updated_at,
-        is_active=model.is_active
+        is_active=model.is_active,
     )
 
 
@@ -25,5 +24,5 @@ def to_model(user: User) -> UserModel:
         password_hash=user.password_hash,
         created_at=user.created_at,
         updated_at=user.updated_at,
-        is_active=user.is_active
+        is_active=user.is_active,
     )

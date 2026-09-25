@@ -8,7 +8,6 @@ from sqlalchemy.orm import Session
 
 from user_registration.models import User
 from user_registration.repository import DuplicateUserError
-
 from user_registration_sqlalchemy.mapper import to_domain, to_model
 from user_registration_sqlalchemy.models import UserModel
 
@@ -18,6 +17,7 @@ class SQLAlchemyUserRepository:
     SQLAlchemy implementation of user repository.
     Transaction ownership remains with the application/service layer.
     """
+
     def __init__(self, session: Session) -> None:
         self._session = session
 
@@ -44,9 +44,7 @@ class SQLAlchemyUserRepository:
         return to_domain(model)
 
     def get_by_username(self, username: str) -> User | None:
-        statement = select(UserModel).where(
-            UserModel.username == username
-        )
+        statement = select(UserModel).where(UserModel.username == username)
         model = self._session.scalar(statement)
 
         if model is None:
@@ -55,9 +53,7 @@ class SQLAlchemyUserRepository:
         return to_domain(model)
 
     def get_by_email(self, email: str) -> User | None:
-        statement = select(UserModel).where(
-            UserModel.email == email
-        )
+        statement = select(UserModel).where(UserModel.email == email)
         model = self._session.scalar(statement)
 
         if model is None:
@@ -66,16 +62,12 @@ class SQLAlchemyUserRepository:
         return to_domain(model)
 
     def exists_by_username(self, username: str) -> bool:
-        statement = select(UserModel.id).where(
-            UserModel.username == username
-        )
+        statement = select(UserModel.id).where(UserModel.username == username)
 
         return self._session.scalar(statement) is not None
 
     def exists_by_email(self, email: str) -> bool:
-        statement = select(UserModel.id).where(
-            UserModel.email == email
-        )
+        statement = select(UserModel.id).where(UserModel.email == email)
 
         return self._session.scalar(statement) is not None
 

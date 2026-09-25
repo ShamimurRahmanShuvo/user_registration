@@ -95,6 +95,7 @@ Conceptually:
 ```python
 from fastapi import Depends
 
+
 def get_registration_service() -> RegistrationService:
     return registration_service
 ```

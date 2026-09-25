@@ -9,6 +9,7 @@ class RegisterUserRequest(BaseModel):
     """
     HTTP representation of RegistrationRequest
     """
+
     model_config = ConfigDict(extra="forbid")
 
     username: str = Field(min_length=1, max_length=50)
@@ -20,4 +21,5 @@ class RegisterUserResponse(BaseModel):
     """
     HTTP representation of a successful registration.
     """
+
     user_id: UUID
