@@ -144,6 +144,7 @@ jobs:
         with:
           name: release-distributions
           path: dist/
+          merge-multiple: true
 
       - name: Publish distributions to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
