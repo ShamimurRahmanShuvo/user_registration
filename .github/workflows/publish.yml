@@ -90,27 +90,19 @@ jobs:
 
       - name: Build core package
         run: |
-          python -m build --outdir dist/core
+          python -m build --outdir dist .
 
       - name: Build FastAPI adapter
         run: |
-          python -m build --outdir dist/fastapi adapters/fastapi
+          python -m build --outdir dist adapters/fastapi
 
       - name: Build SQLAlchemy adapter
         run: |
-          python -m build --outdir dist/sqlalchemy adapters/sqlalchemy
+          python -m build --outdir dist adapters/sqlalchemy
 
       - name: Validate core package
         run: |
-          python -m twine check dist/core/*
-
-      - name: Validate FastAPI package
-        run: |
-          python -m twine check dist/fastapi/*
-
-      - name: Validate SQLAlchemy package
-        run: |
-          python -m twine check dist/sqlalchemy/*
+          python -m twine check dist/*
 
       - name: Upload release distributions
         uses: actions/upload-artifact@v4
