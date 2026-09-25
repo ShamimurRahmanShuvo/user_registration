@@ -16,7 +16,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -71,7 +71,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -94,15 +94,11 @@ jobs:
 
       - name: Build FastAPI adapter
         run: |
-          python -m build \
-            --outdir dist/fastapi \
-            adapters/fastapi
+          python -m build --outdir dist/fastapi adapters/fastapi
 
       - name: Build SQLAlchemy adapter
         run: |
-          python -m build \
-            --outdir dist/sqlalchemy \
-            adapters/sqlalchemy
+          python -m build --outdir dist/sqlalchemy adapters/sqlalchemy
 
       - name: Validate core package
         run: |
@@ -140,7 +136,7 @@ jobs:
 
     steps:
       - name: Download release distributions
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v4
         with:
           name: release-distributions
           path: dist/
@@ -148,4 +144,4 @@ jobs:
       - name: Publish distributions to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
-          packages-dir: dist/core
+          packages-dir: dist/
