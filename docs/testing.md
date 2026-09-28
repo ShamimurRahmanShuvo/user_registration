@@ -47,3 +47,30 @@ Cover configuration, domain models, repositories/fakes, password hashing, passwo
 /tmp/user-registration-release-test/bin/python -m pip install dist/user_registration-*.whl
 /tmp/user-registration-release-test/bin/python -c "import user_registration; print('Package import successful')"
 ```
+
+## Coverage
+
+Coverage uses pytest-cov.
+
+Run:
+
+```bash
+  .venv/bin/python -m pytest \
+    --cov=user_registration \
+    --cov-branch \
+    --cov-report=term-missing \
+    --cov-report=html
+```
+The HTML report is generated at:
+
+`htmlcov/index.html`
+
+## Coverage Policy
+
+The core package has a minimum coverage threshold.
+
+The target is:
+
+`88%+`
+
+Both line and branch coverage are considered.

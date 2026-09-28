@@ -1,3 +1,5 @@
+import pytest
+
 from user_registration.security import generate_token
 
 
@@ -13,3 +15,8 @@ def test_generate_tokens_are_different() -> None:
     second = generate_token()
 
     assert first != second
+
+
+def test_token_length_must_meet_minimum() -> None:
+    with pytest.raises(ValueError):
+        generate_token(15)
