@@ -2,7 +2,13 @@ from uuid import UUID
 
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
-from user_registration_fastapi import get_registration_service, router
+from user_registration_fastapi import (
+    RegisterUserRequest,
+    RegisterUserResponse,
+    RegistrationServiceDependency,
+    get_registration_service,
+    router,
+)
 
 from tests.fakes import InMemoryUserRepository
 from user_registration import (
@@ -33,6 +39,24 @@ def create_app() -> FastAPI:
     app.include_router(router)
 
     return app
+
+
+def test_fastapi_public_api() -> None:
+    assert router is not None
+    assert get_registration_service is not None
+    assert RegistrationServiceDependency is not None
+    assert RegisterUserRequest is not None
+    assert RegisterUserResponse is not None
+
+
+def test_registration_route_is_public() -> None:
+    routes = {
+        (route.path, method)
+        for route in router.routes
+        for method in getattr(route, "methods", set())
+    }
+
+    assert ("/users/register", "POST") in routes
 
 
 def test_register_user() -> None:
