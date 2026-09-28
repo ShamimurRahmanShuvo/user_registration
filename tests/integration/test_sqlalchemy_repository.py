@@ -4,7 +4,13 @@ from uuid import uuid4
 import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
-from user_registration_sqlalchemy import Base, SQLAlchemyUserRepository
+from user_registration_sqlalchemy import (
+    Base,
+    SQLAlchemyUserRepository,
+    UserModel,
+    to_domain,
+    to_model,
+)
 
 from user_registration import User
 from user_registration.repository import DuplicateUserError
@@ -38,6 +44,14 @@ def user() -> User:
         updated_at=now,
         is_active=True,
     )
+
+
+def test_sqlalchemy_public_api() -> None:
+    assert Base is not None
+    assert UserModel is not None
+    assert SQLAlchemyUserRepository is not None
+    assert to_domain is not None
+    assert to_model is not None
 
 
 def test_create_and_get_user(repository: SQLAlchemyUserRepository, user: User) -> None:

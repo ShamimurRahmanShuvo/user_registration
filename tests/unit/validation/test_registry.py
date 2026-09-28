@@ -1,3 +1,5 @@
+import pytest
+
 from user_registration.validation import UsernameValidator, ValidationRegistry
 
 
@@ -73,3 +75,29 @@ def test_registry_clear() -> None:
     registry.clear("username")
 
     assert registry.has_validators("username") is False
+
+
+def test_register_normalizes_field_name() -> None:
+    class Validator:
+        def validate(self, value: str) -> str | None:
+            return "Invalid"
+
+    registry = ValidationRegistry()
+    registry.register("USERNAME", Validator())
+
+    assert registry.has_validators("username")
+    assert registry.has_validators("USERNAME")
+
+    errors = registry.validate("username", "test")
+    assert errors == ["Invalid"]
+
+
+def test_register_rejects_empty_field_name() -> None:
+    class Validator:
+        def validate(self, value: str) -> str | None:
+            return None
+
+    registry = ValidationRegistry()
+
+    with pytest.raises(ValueError, match="field_name must not be empty"):
+        registry.register("   ", Validator())

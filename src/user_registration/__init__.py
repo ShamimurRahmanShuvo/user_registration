@@ -43,22 +43,27 @@ from user_registration.validation import (
     create_default_validation_registry,
 )
 
-__version__ = "0.1.0"
+__version__ = "0.1.3"
 
 __all__ = [
     "__version__",
+    # Configuration
     "ConfigurationError",
     "RegistrationConfig",
+    # Models
     "RegistrationRequest",
     "User",
+    # Repository
     "UserRepository",
     "RepositoryError",
     "DuplicateUserError",
+    # Password
     "PasswordHasher",
     "Argon2Config",
     "Argon2Hasher",
     "PasswordPolicyValidator",
     "PasswordValidatorAdapter",
+    # Registration
     "RegistrationError",
     "UserAlreadyExistsError",
     "RegistrationPersistenceError",
@@ -68,11 +73,13 @@ __all__ = [
     "RegistrationService",
     "RegistrationHook",
     "NoOpRegistrationHook",
+    # Validation
     "FieldValidator",
     "ValidationError",
     "UsernameValidator",
     "EmailValidator",
     "ValidationRegistry",
     "create_default_validation_registry",
+    # Security
     "generate_token",
 ]

@@ -25,7 +25,7 @@ class ValidationRegistry:
         if not normalized_field_name:
             raise ValueError("field_name must not be empty")
 
-        self._validators.setdefault(field_name, []).append(validator)
+        self._validators.setdefault(normalized_field_name, []).append(validator)
 
     def validate(self, field_name: str, value: str) -> list[str]:
         """
