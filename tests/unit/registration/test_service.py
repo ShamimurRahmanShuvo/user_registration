@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import pytest
+
 from tests.fakes import InMemoryUserRepository
 from user_registration.config import RegistrationConfig
 from user_registration.models import RegistrationRequest
@@ -258,3 +260,33 @@ def test_repository_duplicate_error_is_handled() -> None:
     assert result.success is False
     assert result.status.value == "duplicate"
     assert result.user_id is None
+
+
+@pytest.mark.parametrize(
+    ("username", "email", "password"),
+    [
+        (None, "user@example.com", "StrongPassword123!"),
+        ("username", None, "StrongPassword123!"),
+        ("username", "user@example.com", None),
+        ("", "user@example.com", "StrongPassword123!"),
+        ("username", "", "StrongPassword123!"),
+        ("username", "user@example.com", ""),
+    ],
+)
+def test_register_rejects_missing_required_fields(
+    registration_service,
+    username: str | None,
+    email: str | None,
+    password: str | None,
+) -> None:
+    result = registration_service.register(
+        RegistrationRequest(
+            username=username,
+            email=email,
+            password=password,
+        )
+    )
+
+    assert result.success is False
+    assert result.status.value == "validation_error"
+    assert result.errors
