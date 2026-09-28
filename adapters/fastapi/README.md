@@ -66,8 +66,8 @@ Example request:
 
 ```json
 {
-  "username": "shuvo",
-  "email": "shuvo@example.com",
+  "username": "test",
+  "email": "test@example.com",
   "password": "SecurePassword123!"
 }
 ```
@@ -76,13 +76,11 @@ Example successful response:
 
 ```json
 {
-  "id": "...",
-  "username": "shuvo",
-  "email": "shuvo@example.com"
+  "user_id": "550e8400-e29b-41d4-a716-446655440000"
 }
 ```
 
-The exact response fields depend on the adapter version and configured registration service.
+The response contains the ID assigned to the newly registered user.
 
 ## Dependency Injection
 

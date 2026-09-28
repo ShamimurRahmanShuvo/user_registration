@@ -5,14 +5,43 @@ build-backend = "hatchling.build"
 [project]
 name = "user-registration-sqlalchemy"
 version = "0.1.3"
-description = "SQLAlchemy adapter for user-registration package."
+description = "SQLAlchemy 2.x repository adapter for the framework-agnostic user-registration package."
 readme = "README.md"
 requires-python = ">=3.12"
+
+authors = [
+    { name = "Md Shamimur Rahman Shuvo" }
+]
+
+keywords = [
+    "python",
+    "user-registration",
+    "sqlalchemy",
+    "database",
+    "repository",
+    "registration",
+]
+
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Database",
+]
 
 dependencies = [
     "user-registration>=0.1.0,<1.0.0",
     "SQLAlchemy>=2.0,<3.0",
 ]
+
+[project.urls]
+Homepage = "https://github.com/ShamimurRahmanShuvo/user_registration"
+Repository = "https://github.com/ShamimurRahmanShuvo/user_registration"
+Issues = "https://github.com/ShamimurRahmanShuvo/user_registration/issues"
 
 [project.optional-dependencies]
 dev = [

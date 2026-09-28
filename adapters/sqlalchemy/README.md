@@ -10,12 +10,18 @@ It keeps persistence concerns separate from registration business logic.
 
 * SQLAlchemy 2.x repository implementation
 * Implements the `UserRepository` contract from `user-registration`
-* Async SQLAlchemy support
+* SQLAlchemy 2.x synchronous repository implementation
 * User persistence and lookup
 * Username/email duplicate detection
 * Database constraint error handling
 * Compatible with SQLite, PostgreSQL, MySQL and other SQLAlchemy-supported databases
 * Framework independent
+
+## Async SQLAlchemy
+
+The current adapter exposes a synchronous `Session`-based repository.
+
+Async SQLAlchemy support is not part of the current adapter contract.
 
 ## Installation
 

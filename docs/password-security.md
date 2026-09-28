@@ -17,9 +17,9 @@ Argon2 hash
 password_hash
 ```
 
-## Argon2
+## Default Argon2 Configuration
 
-The default hasher is `Argon2Hasher`.
+The default hasher is `Argon2Hasher` and the current default configuration is:
 
 ```python
 Argon2Config(
@@ -31,7 +31,7 @@ Argon2Config(
 )
 ```
 
-Applications can explicitly configure these values when required by their security/performance policy.
+Applications can explicitly configure these values when required by their security/performance requirements.
 
 ## Verification
 
