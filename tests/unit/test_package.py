@@ -33,6 +33,13 @@ from user_registration import (
 )
 
 
+def test_public_api() -> None:
+    config = RegistrationConfig()
+
+    assert config is not None
+    assert ConfigurationError is not None
+
+
 def test_public_api_exports() -> None:
     expected_exports = {
         "__version__",
