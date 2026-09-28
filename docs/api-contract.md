@@ -16,6 +16,46 @@ The package does not depend on:
 Framework and database integrations are implemented outside the core package.
 
 ---
+
+## Public API Contract
+
+### Core Package
+
+The following imports are part of the supported public API:
+
+```python
+from user_registration import (
+    Argon2Config,
+    Argon2Hasher,
+    ConfigurationError,
+    DuplicateUserError,
+    EmailValidator,
+    FieldValidator,
+    NoOpRegistrationHook,
+    PasswordHasher,
+    PasswordPolicyValidator,
+    PasswordValidatorAdapter,
+    RegistrationConfig,
+    RegistrationError,
+    RegistrationHook,
+    RegistrationHookError,
+    RegistrationPersistenceError,
+    RegistrationRequest,
+    RegistrationResult,
+    RegistrationService,
+    RegistrationStatus,
+    RepositoryError,
+    User,
+    UserAlreadyExistsError,
+    UserRepository,
+    UsernameValidator,
+    ValidationError,
+    ValidationRegistry,
+    create_default_validation_registry,
+    generate_token,
+)
+```
+
 # API Contract
 
 ## RegistrationRequest
