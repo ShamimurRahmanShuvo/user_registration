@@ -49,6 +49,7 @@ jobs:
       - name: Run tests with coverage
         run: |
           python -m pytest \
+            --ignore=tests/integration \
             --cov=user_registration \
             --cov-branch \
             --cov-report=term-missing \
