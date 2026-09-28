@@ -6,8 +6,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 from user_registration_sqlalchemy import (
     Base,
-    UserModel,
     SQLAlchemyUserRepository,
+    UserModel,
     to_domain,
     to_model,
 )
