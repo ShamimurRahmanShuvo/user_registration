@@ -14,8 +14,13 @@ from user_registration_sqlalchemy.models import UserModel
 
 class SQLAlchemyUserRepository:
     """
-    SQLAlchemy implementation of user repository.
-    Transaction ownership remains with the application/service layer.
+    SQLAlchemy implementation of UserRepository.
+
+    The application owns the outer transaction.
+
+    Repository operations may use SQLAlchemy nested transactions
+    (savepoints) to isolate constraint failures without rolling back
+    unrelated application work.
     """
 
     def __init__(self, session: Session) -> None:
@@ -24,13 +29,13 @@ class SQLAlchemyUserRepository:
     def create(self, user: User) -> User:
         model = to_model(user)
 
-        self._session.add(model)
+        # self._session.add(model)
 
         try:
-            self._session.flush()
+            with self._session.begin_nested():
+                self._session.add(model)
+                self._session.flush()
         except IntegrityError as exc:
-            self._session.rollback()
-
             raise DuplicateUserError("Username or email is already registered") from exc
 
         return to_domain(model)
@@ -77,13 +82,17 @@ class SQLAlchemyUserRepository:
         if model is None:
             raise KeyError(f"User {user.id} does not exist")
 
-        model.username = user.username
-        model.email = user.email
-        model.password_hash = user.password_hash
-        model.updated_at = user.updated_at
-        model.is_active = user.is_active
+        try:
+            with self._session.begin_nested():
+                model.username = user.username
+                model.email = user.email
+                model.password_hash = user.password_hash
+                model.updated_at = user.updated_at
+                model.is_active = user.is_active
 
-        self._session.flush()
+                self._session.flush()
+        except IntegrityError as exc:
+            raise DuplicateUserError("Username or email is already registered") from exc
 
         return to_domain(model)
 
@@ -93,7 +102,8 @@ class SQLAlchemyUserRepository:
         if model is None:
             return False
 
-        self._session.delete(model)
-        self._session.flush()
+        with self._session.begin_nested():
+            self._session.delete(model)
+            self._session.flush()
 
         return True

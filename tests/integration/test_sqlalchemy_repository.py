@@ -163,38 +163,65 @@ def test_delete_missing_user_returns_false(
     assert deleted is False
 
 
-def test_duplicate_username_and_email_raises_duplicate_user_error(
-    repository: SQLAlchemyUserRepository, user: User
+def test_duplicate_username_does_not_rollback_outer_transaction(
+    session: Session,
+    repository: SQLAlchemyUserRepository,
+    user: User,
 ) -> None:
     repository.create(user)
 
-    duplicate = User(
-        id=uuid4(),
+    duplicate = User.create(
         username=user.username,
-        email="different@example.com",
-        password_hash="different-hash",
-        created_at=user.created_at,
-        updated_at=user.updated_at,
-        is_active=True,
+        email="different@example.ca",
+        password_hash="hash",
+    )
+    with pytest.raises(DuplicateUserError):
+        repository.create(duplicate)
+
+    # Outer transaction remains usable
+    another = User.create(
+        username="another_user",
+        email="another@example.ca",
+        password_hash="hash",
+    )
+    repository.create(another)
+    session.commit()
+
+    first = repository.get_by_username(user.username)
+    second = repository.get_by_username("another_user")
+
+    assert first is not None
+    assert second is not None
+
+
+def test_duplicate_email_does_not_rollback_outer_transaction(
+    session: Session,
+    repository: SQLAlchemyUserRepository,
+    user: User,
+) -> None:
+    repository.create(user)
+
+    duplicate = User.create(
+        username="different-user",
+        email=user.email,
+        password_hash="hash",
     )
 
     with pytest.raises(DuplicateUserError):
         repository.create(duplicate)
 
-    # Duplicate email
-    repository.create(user)
-    duplicate_email = User(
-        id=uuid4(),
-        username="differentuser",
-        email=user.email,
-        password_hash="different-hash",
-        created_at=user.created_at,
-        updated_at=user.updated_at,
-        is_active=True,
+    another = User.create(
+        username="another-user",
+        email="another@example.com",
+        password_hash="hash",
     )
 
-    with pytest.raises(DuplicateUserError):
-        repository.create(duplicate_email)
+    repository.create(another)
+
+    session.commit()
+
+    assert repository.get_by_username(user.username) is not None
+    assert repository.get_by_username("another-user") is not None
 
 
 def test_sqlalchemy_repository_persists_user() -> None:
@@ -258,6 +285,106 @@ def test_sqlalchemy_repository_rejects_duplicate_username() -> None:
             repository.create(second)
 
 
+def test_update_duplicate_username_raises_duplicate_user_error(
+    session: Session,
+    repository: SQLAlchemyUserRepository,
+    user: User,
+) -> None:
+    repository.create(user)
+
+    second = User.create(
+        username="second-user",
+        email="second@example.com",
+        password_hash="hash",
+    )
+
+    repository.create(second)
+
+    conflicting_update = User(
+        id=second.id,
+        username=user.username,
+        email=second.email,
+        password_hash=second.password_hash,
+        created_at=second.created_at,
+        updated_at=datetime.now(UTC),
+        is_active=second.is_active,
+    )
+
+    with pytest.raises(DuplicateUserError):
+        repository.update(conflicting_update)
+
+    session.rollback()
+
+
+def test_update_duplicate_username_preserves_outer_transaction(
+    session: Session,
+    repository: SQLAlchemyUserRepository,
+    user: User,
+) -> None:
+    repository.create(user)
+
+    second = User.create(
+        username="second-user",
+        email="second@example.com",
+        password_hash="hash",
+    )
+
+    repository.create(second)
+
+    conflicting_update = User(
+        id=second.id,
+        username=user.username,
+        email=second.email,
+        password_hash=second.password_hash,
+        created_at=second.created_at,
+        updated_at=datetime.now(UTC),
+        is_active=second.is_active,
+    )
+
+    with pytest.raises(DuplicateUserError):
+        repository.update(conflicting_update)
+
+    third = User.create(
+        username="third-user",
+        email="third@example.com",
+        password_hash="hash",
+    )
+
+    repository.create(third)
+
+    session.commit()
+
+    assert repository.get_by_username("third-user") is not None
+
+
+def test_update_duplicate_email_raises_duplicate_user_error(
+    repository: SQLAlchemyUserRepository,
+    user: User,
+) -> None:
+    repository.create(user)
+
+    second = User.create(
+        username="second-user",
+        email="second@example.com",
+        password_hash="hash",
+    )
+
+    repository.create(second)
+
+    conflicting_update = User(
+        id=second.id,
+        username=second.username,
+        email=user.email,
+        password_hash=second.password_hash,
+        created_at=second.created_at,
+        updated_at=datetime.now(UTC),
+        is_active=second.is_active,
+    )
+
+    with pytest.raises(DuplicateUserError):
+        repository.update(conflicting_update)
+
+
 def test_repository_persists_password_hash(
     repository: SQLAlchemyUserRepository,
 ) -> None:
@@ -273,3 +400,42 @@ def test_repository_persists_password_hash(
 
     assert stored is not None
     assert stored.password_hash == "$argon2id$v=19$example-hash"
+
+
+def test_failed_update_does_not_persist_conflicting_values(
+    session: Session,
+    repository: SQLAlchemyUserRepository,
+    user: User,
+) -> None:
+    repository.create(user)
+
+    second = User.create(
+        username="second-user",
+        email="second@example.com",
+        password_hash="original-hash",
+    )
+
+    repository.create(second)
+
+    conflicting_update = User(
+        id=second.id,
+        username=user.username,
+        email=second.email,
+        password_hash="new-hash",
+        created_at=second.created_at,
+        updated_at=datetime.now(UTC),
+        is_active=False,
+    )
+
+    with pytest.raises(DuplicateUserError):
+        repository.update(conflicting_update)
+
+    session.expire_all()
+
+    stored = repository.get_by_id(second.id)
+
+    assert stored is not None
+    assert stored.username == "second-user"
+    assert stored.email == "second@example.com"
+    assert stored.password_hash == "original-hash"
+    assert stored.is_active is True
