@@ -1,3 +1,5 @@
+import tomllib
+from pathlib import Path
 from uuid import UUID
 
 import user_registration
@@ -130,3 +132,14 @@ def test_user_is_public() -> None:
     )
 
     assert user.username == "test"
+
+
+def test_package_version_matches_pyproject() -> None:
+    pyproject_path = Path(__file__).parents[2] / "pyproject.toml"
+
+    with pyproject_path.open("rb") as file:
+        metadata = tomllib.load(file)
+
+    expected_version = metadata["project"]["version"]
+
+    assert user_registration.__version__ == expected_version
