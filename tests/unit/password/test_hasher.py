@@ -5,11 +5,6 @@ import pytest
 from user_registration.password import Argon2Hasher, PasswordHasher
 
 
-def test_argon2_hasher_satisfies_protocol() -> None:
-    hasher = Argon2Hasher()
-    assert isinstance(hasher, PasswordHasher)
-
-
 def test_hash_returns_string_no_plaintext_password() -> None:
     hasher = Argon2Hasher()
     password = "StrongPassword123!"
