@@ -1,5 +1,5 @@
 """
-Persistence abstraction.
+Persistence abstraction and repository contracts.
 """
 
 from __future__ import annotations
@@ -25,7 +25,13 @@ class UserRepository(Protocol):
     Implementations may use any persistence technology, including:
     - SQLAlchemy    - Django ORM    - MongoDB   - DynamoDB      - PostgreSQL
     - MySQL     - SQLite    - in-memory storage     - custom storage systems
-    The core user-registration package doesn't depend on any of them
+
+    Transaction ownership belongs to the application using the repository.
+    Repository implementations must not commit or roll back the caller's
+    outer transaction.
+
+    Repository implementations may use an internal savepoint/nested
+    transaction when necessary to isolate a persistence operation.
     """
 
     def create(self, user: User) -> User:
@@ -33,6 +39,12 @@ class UserRepository(Protocol):
         Persists a new user.
         Args:
             user: User domain object to persist.
+        Raises:
+            DuplicateUserError:
+                If the persistence layer detects a username or email
+                uniqueness violation.
+            RepositoryError:
+                For other persistence-specific failures.
         Returns:
             The persisted user.
         """
