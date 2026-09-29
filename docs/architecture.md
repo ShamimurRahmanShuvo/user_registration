@@ -74,3 +74,31 @@ The application owns transaction boundaries. Repositories flush or persist chang
 ## Error boundaries
 
 Expected business outcomes use `RegistrationResult`. Repository uniqueness failures use `DuplicateUserError`. Persistence failures can be represented by `RegistrationPersistenceError`. Hook failures use `RegistrationHookError`.
+
+## Architectural Contract
+```text
+                  RegistrationService
+                          |
+                          v
+                   UserRepository
+                          |
+              +-----------+-----------+
+              |                       |
+              v                       v
+        Application DB          Other Repository
+        Transaction             Implementations
+              |
+              v
+      SQLAlchemy Session
+              |
+       +------+------+
+       |             |
+   Outer TX      Savepoint
+       |             |
+       |        Repository operation
+       |             |
+       +-------------+
+              |
+        Application decides
+          COMMIT / ROLLBACK
+```

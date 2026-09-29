@@ -74,3 +74,19 @@ The target is:
 `88%+`
 
 Both line and branch coverage are considered.
+
+## Repository Transaction Tests
+
+Repository integration tests must verify:
+
+- successful create
+- successful update
+- successful delete
+- duplicate username
+- duplicate email
+- duplicate update
+- missing user behavior
+- repository does not commit
+- repository does not rollback the caller's outer transaction
+- failed uniqueness operations do not poison the outer transaction
+- subsequent operations remain possible after a savepoint rollback

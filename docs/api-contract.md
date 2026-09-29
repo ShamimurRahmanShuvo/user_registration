@@ -17,6 +17,53 @@ Framework and database integrations are implemented outside the core package.
 
 ---
 
+## Repository Transaction Contract
+
+The `UserRepository` is transaction-aware but does not own the application's
+outer transaction.
+
+Repository implementations:
+
+- must not commit the caller's transaction
+- must not roll back the caller's transaction
+- may use savepoints to isolate operation-level failures
+- must translate persistence-specific duplicate errors to
+  `DuplicateUserError`
+
+The SQLAlchemy adapter follows this contract using nested transactions.
+
+## Concurrency and Uniqueness
+
+The registration service performs pre-persistence duplicate checks:
+
+```text
+exists_by_username
+exists_by_email
+```
+
+These checks are not sufficient for concurrency safety.
+
+The persistence layer must also enforce unique constraints.
+
+Therefore the expected behavior is:
+```text
+Request A ----\
+               +--> existence check
+Request B ----/
+
+Both may see "not found"
+
+        |
+        v
+
+Database unique constraint
+        |
+        +--> one succeeds
+        |
+        +--> one receives DuplicateUserError
+```
+The database constraint is the final authority.
+
 ## Public API Contract
 
 ### Core Package
