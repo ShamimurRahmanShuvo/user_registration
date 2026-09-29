@@ -285,7 +285,18 @@ USER_REGISTRATION_NORMALIZE_USERNAME
 See [docs/configuration.md]('https://github.com/ShamimurRahmanShuvo/user_registration/blob/main/docs/configuration.md')
 
 ## Password Security
-Passwords are never stored in plaintext.
+Passwords are validated and hashed using Argon2 before persistence.
+
+The package does not store plaintext passwords.
+
+Security-sensitive tokens use Python's `secrets` module.
+
+Applications should never log plaintext passwords, password hashes,
+registration requests containing passwords, or security tokens.
+
+The package intentionally does not implement authentication,
+authorization, rate limiting, MFA, or account lockout. Those concerns
+belong in the application or authentication layer.
 
 The registration service uses the configured `PasswordHasher` implementation.
 
