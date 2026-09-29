@@ -1,8 +1,9 @@
 from datetime import UTC, datetime
 from uuid import uuid4
 
-from user_registration import User
 from user_registration_sqlalchemy import UserModel, to_domain, to_model
+
+from user_registration import User
 
 
 def test_to_model() -> None:

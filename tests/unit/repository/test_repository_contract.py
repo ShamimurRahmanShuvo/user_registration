@@ -1,5 +1,3 @@
-from uuid import uuid4
-
 from user_registration import User
 from user_registration.repository import UserRepository
 
@@ -17,21 +15,13 @@ class InMemoryRepository:
 
     def get_by_username(self, username: str):
         return next(
-            (
-                user
-                for user in self.users.values()
-                if user.username == username
-            ),
+            (user for user in self.users.values() if user.username == username),
             None,
         )
 
     def get_by_email(self, email: str):
         return next(
-            (
-                user
-                for user in self.users.values()
-                if user.email == email
-            ),
+            (user for user in self.users.values() if user.email == email),
             None,
         )
 

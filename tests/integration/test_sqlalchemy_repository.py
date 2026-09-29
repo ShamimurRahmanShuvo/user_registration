@@ -164,9 +164,9 @@ def test_delete_missing_user_returns_false(
 
 
 def test_duplicate_username_does_not_rollback_outer_transaction(
-        session: Session,
-        repository: SQLAlchemyUserRepository,
-        user: User,
+    session: Session,
+    repository: SQLAlchemyUserRepository,
+    user: User,
 ) -> None:
     repository.create(user)
 
