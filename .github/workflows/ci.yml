@@ -205,7 +205,7 @@ jobs:
           python -m twine check dist/*
 
       - name: Validate synchronized versions
-          run: |
+        run: |
             python scripts/check_versions.py
 
       - name: Create clean wheel test environment
