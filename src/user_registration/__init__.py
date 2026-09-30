@@ -1,5 +1,6 @@
 """Public API for the user-registration package."""
 
+from user_registration._version import __version__
 from user_registration.config import (
     ConfigurationError,
     RegistrationConfig,
@@ -42,8 +43,6 @@ from user_registration.validation import (
     ValidationRegistry,
     create_default_validation_registry,
 )
-
-__version__ = "0.1.3"
 
 __all__ = [
     "__version__",

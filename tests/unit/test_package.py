@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+import re
 import tomllib
 from pathlib import Path
 from uuid import UUID
@@ -33,6 +36,8 @@ from user_registration import (
     create_default_validation_registry,
     generate_token,
 )
+
+ROOT = Path(__file__).resolve().parents[2]
 
 
 def test_public_api() -> None:
@@ -114,7 +119,7 @@ def test_public_api_imports_are_available() -> None:
 
 
 def test_package_version_is_defined() -> None:
-    assert user_registration.__version__ == "0.1.3"
+    assert user_registration.__version__
 
 
 def test_registration_result_is_public() -> None:
@@ -134,12 +139,55 @@ def test_user_is_public() -> None:
     assert user.username == "test"
 
 
-def test_package_version_matches_pyproject() -> None:
-    pyproject_path = Path(__file__).parents[2] / "pyproject.toml"
+def test_package_version_matches_version_source() -> None:
+    version_file = ROOT / "src" / "user_registration" / "_version.py"
 
-    with pyproject_path.open("rb") as file:
-        metadata = tomllib.load(file)
+    content = version_file.read_text(encoding="utf-8")
 
-    expected_version = metadata["project"]["version"]
+    match = re.search(
+        r'^__version__\s*=\s*["\']([^"\']+)["\']',
+        content,
+        re.MULTILINE,
+    )
 
-    assert user_registration.__version__ == expected_version
+    assert match is not None
+    assert user_registration.__version__ == match.group(1)
+
+
+def _get_source_version(root: Path) -> str:
+    version_file = root / "src" / "user_registration" / "_version.py"
+
+    content = version_file.read_text(encoding="utf-8")
+
+    match = re.search(
+        r'^__version__\s*=\s*["\']([^"\']+)["\']',
+        content,
+        re.MULTILINE,
+    )
+
+    assert match is not None
+
+    return match.group(1)
+
+
+def test_all_package_versions_are_synchronized() -> None:
+    root = Path(__file__).parents[2]
+
+    source_version = _get_source_version(root)
+
+    adapter_paths = [
+        root / "adapters" / "fastapi" / "pyproject.toml",
+        root / "adapters" / "sqlalchemy" / "pyproject.toml",
+    ]
+
+    for path in adapter_paths:
+        with path.open("rb") as file:
+            data = tomllib.load(file)
+
+        package_name = data["project"]["name"]
+        package_version = data["project"]["version"]
+
+        assert package_version == source_version, (
+            f"{package_name} has version {package_version}, "
+            f"but source version is {source_version}"
+        )

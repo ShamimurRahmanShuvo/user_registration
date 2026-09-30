@@ -62,11 +62,11 @@ jobs:
 
       - name: Run Ruff lint
         run: |
-          python -m ruff check src tests
+          python -m ruff check src tests scripts
 
       - name: Check Ruff formatting
         run: |
-          python -m ruff format --check src tests
+          python -m ruff format --check src tests scripts
 
 
   fastapi:
@@ -204,32 +204,9 @@ jobs:
         run: |
           python -m twine check dist/*
 
-      - name: Verify package versions
-        run: |
-          python - <<'PY'
-          import glob
-          import re
-          import sys
-
-          expected_version = "0.1.3"
-
-          artifacts = glob.glob("dist/*")
-
-          if len(artifacts) != 6:
-              print(f"Expected 6 artifacts, found {len(artifacts)}")
-              sys.exit(1)
-
-          for artifact in artifacts:
-              filename = artifact.rsplit("/", 1)[-1]
-
-              if expected_version not in filename:
-                  print(
-                      f"Unexpected version in artifact: {filename}"
-                  )
-                  sys.exit(1)
-
-          print(f"All artifacts use version {expected_version}")
-          PY
+      - name: Validate synchronized versions
+          run: |
+            python scripts/check_versions.py
 
       - name: Create clean wheel test environment
         run: |
