@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "user-registration-sqlalchemy"
-version = "0.1.4"
+version = "1.0.0rc1"
 description = "SQLAlchemy 2.x repository adapter for the framework-agnostic user-registration package."
 readme = "README.md"
 requires-python = ">=3.12"
@@ -34,7 +34,7 @@ classifiers = [
 ]
 
 dependencies = [
-    "user-registration>=0.1.0,<1.0.0",
+    "user-registration>=1.0.0rc1,<2.0.0",
     "SQLAlchemy>=2.0,<3.0",
 ]
 
