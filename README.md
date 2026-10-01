@@ -236,7 +236,7 @@ The adapter exposes:
 | Persistence failure     | `500 Internal Server Error` |
 The application supplies the `RegistrationService` through dependency injection.
 
-See [docs/fastapi.md](docs/fastapi.md)
+See [FastAPI Integration Guide](https://github.com/ShamimurRahmanShuvo/user_registration/blob/main/docs/fastapi.md)
 
 ## SQLAlchemy
 ### Install:
@@ -255,7 +255,7 @@ The application remains responsible for:
 - migrations
 - database configuration
 
-See [docs/sqlalchemy.md](docs/sqlalchemy.md)
+See [SQLAlchemy Integration Guide](https://github.com/ShamimurRahmanShuvo/user_registration/blob/main/docs/sqlalchemy.md)
 
 ## Configuration
 Registration behavior can be configured directlyL
@@ -282,7 +282,7 @@ USER_REGISTRATION_PASSWORD_REQUIRED
 USER_REGISTRATION_NORMALIZE_EMAIL
 USER_REGISTRATION_NORMALIZE_USERNAME
 ```
-See [docs/configuration.md](docs/configuration.md)
+See [Configuration Guide](https://github.com/ShamimurRahmanShuvo/user_registration/blob/main/docs/configuration.md)
 
 ## Password Security
 Passwords are validated and hashed using Argon2 before persistence.
@@ -315,7 +315,7 @@ assert hasher.verify(
 ```
 Password policy validation is provided through the `PasswordPolicyValidator` abstraction.
 
-See [docs/password-security.md](docs/password-security.md)
+See [Password Security Guide](https://github.com/ShamimurRahmanShuvo/user_registration/blob/main/docs/password-security.md)
 
 ## Extensibility
 The package is designed around protocols and dependency injection
@@ -344,12 +344,12 @@ class ReservedUsernameValidator:
         return None
 ```
 
-See [docs/validation.md](docs/validation.md)
+See [Validation Guide](https://github.com/ShamimurRahmanShuvo/user_registration/blob/main/docs/validation.md)
 
 ### Registration hooks
 Applications can register hooks that execute after successful registration
 
-See [docs/hooks.md](docs/hooks.md)
+See [Registration Hooks Guide](https://github.com/ShamimurRahmanShuvo/user_registration/blob/main/docs/hooks.md)
 
 
 
@@ -357,7 +357,7 @@ See [docs/hooks.md](docs/hooks.md)
 - Login
 - Sessions
 - JWT authentication
-- 0Auth/OIDC
+- OAuth/OIDC
 - MFA
 - RBAC
 - Password reset
@@ -404,19 +404,22 @@ Build the package:
 .venv/bin/python -m build
 ```
 ## Documentation
-Detailed documentation is available in [docs/](docs/)
 
-- [Architecture](docs/architecture.md)
-- [API Contract](docs/api-contract.md)
-- [Configuration](docs/configuration.md)
-- [Repositories](docs/repositories.md)
-- [Validation](docs/valiidation.md)
-- [Password Security](docs/password-security.md)
-- [Registration Hooks](docs/hooks.md)
-- [FastAPI Integration](docs/fastapi.md)
-- [SQLAlchemy Integration](docs/sqlalchemy.md)
-- [Testing](docs/testing.md)
-- [Release Guide](docs/release.md)
+Detailed documentation is available in the
+[GitHub documentation directory](https://github.com/ShamimurRahmanShuvo/user_registration/tree/main/docs).
+
+- [Index](https://github.com/ShamimurRahmanShuvo/user_registration/blob/main/docs/index.md)
+- [Architecture](https://github.com/ShamimurRahmanShuvo/user_registration/blob/main/docs/architecture.md)
+- [API Contract](https://github.com/ShamimurRahmanShuvo/user_registration/blob/main/docs/api-contract.md)
+- [Configuration](https://github.com/ShamimurRahmanShuvo/user_registration/blob/main/docs/configuration.md)
+- [Repositories](https://github.com/ShamimurRahmanShuvo/user_registration/blob/main/docs/repositories.md)
+- [Validation](https://github.com/ShamimurRahmanShuvo/user_registration/blob/main/docs/validation.md)
+- [Password Security](https://github.com/ShamimurRahmanShuvo/user_registration/blob/main/docs/password-security.md)
+- [Registration Hooks](https://github.com/ShamimurRahmanShuvo/user_registration/blob/main/docs/hooks.md)
+- [FastAPI Integration](https://github.com/ShamimurRahmanShuvo/user_registration/blob/main/docs/fastapi.md)
+- [SQLAlchemy Integration](https://github.com/ShamimurRahmanShuvo/user_registration/blob/main/docs/sqlalchemy.md)
+- [Testing](https://github.com/ShamimurRahmanShuvo/user_registration/blob/main/docs/testing.md)
+- [Release Guide](https://github.com/ShamimurRahmanShuvo/user_registration/blob/main/docs/release.md)
 
 ## Versioning
 The project follows semantic versioning.
@@ -425,14 +428,18 @@ During the `0.x` development series, public APIs may change between minor releas
 
 The `1.0.0` release will mark the first stable public API contract
 
-See [CHANGELOG.md](CHANGELOG.md) for release history.
+See the [CHANGELOG](https://github.com/ShamimurRahmanShuvo/user_registration/blob/main/CHANGELOG.md) 
+for release history.
+
 ## License
 
 MIT License
 
-See [LICENSE](LICENSE)
+See the [MIT License](https://github.com/ShamimurRahmanShuvo/user_registration/blob/main/LICENSE)
 
 ## Project Links
-- [GitHub Repository](./)
-- [Issue Tracker](../../issues)
-- [Documentation](docs/)
+
+- [GitHub Repository](https://github.com/ShamimurRahmanShuvo/user_registration)
+- [Issue Tracker](https://github.com/ShamimurRahmanShuvo/user_registration/issues)
+- [Documentation](https://github.com/ShamimurRahmanShuvo/user_registration/tree/main/docs)
+- [PyPI Package](https://pypi.org/project/user-registration/)

@@ -1,6 +1,6 @@
 # SQLAlchemy Integration
 
-Install:
+###Install:
 
 ```bash
 pip install user-registration-sqlalchemy

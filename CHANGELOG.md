@@ -5,6 +5,11 @@ All notable changes to this project are documented in this file.
 
 The project follows Semantic Versioning.
 
+## [1.0.1] - 2026-10-01
+
+### Fix
+- Broken links in documentation.
+
 ## [1.0.0] - 2026-10-01
 
 ### Added

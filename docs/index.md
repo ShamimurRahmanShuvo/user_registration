@@ -2,28 +2,28 @@
 
 ## Getting Started
 
-- [Installation](installation.md)
-- [Configuration](configuration.md)
-- [API Contract](api-contract.md)
+- [Installation](https://github.com/ShamimurRahmanShuvo/user_registration/blob/main/docs/installation.md)
+- [Configuration](https://github.com/ShamimurRahmanShuvo/user_registration/blob/main/docs/configuration.md)
+- [API Contract](https://github.com/ShamimurRahmanShuvo/user_registration/blob/main/docs/api-contract.md)
 
 ## Architecture
 
-- [Architecture](architecture.md)
-- [Repositories](repositories.md)
-- [Validation](validation.md)
-- [Registration Hooks](hooks.md)
-- [Password Security](password-security.md)
+- [Architecture](https://github.com/ShamimurRahmanShuvo/user_registration/blob/main/docs/architecture.md)
+- [Repositories](https://github.com/ShamimurRahmanShuvo/user_registration/blob/main/docs/repositories.md)
+- [Validation](https://github.com/ShamimurRahmanShuvo/user_registration/blob/main/docs/validation.md)
+- [Registration Hooks](https://github.com/ShamimurRahmanShuvo/user_registration/blob/main/docs/hooks.md)
+- [Password Security](https://github.com/ShamimurRahmanShuvo/user_registration/blob/main/docs/password-security.md)
 
 ## Integrations
 
-- [FastAPI](fastapi.md)
-- [SQLAlchemy](sqlalchemy.md)
-- [Adapters](adapters.md)
+- [FastAPI](https://github.com/ShamimurRahmanShuvo/user_registration/blob/main/docs/fastapi.md)
+- [SQLAlchemy](https://github.com/ShamimurRahmanShuvo/user_registration/blob/main/docs/sqlalchemy.md)
+- [Adapters](https://github.com/ShamimurRahmanShuvo/user_registration/blob/main/docs/adapters.md)
 
 ## Development
 
-- [Testing](testing.md)
-- [Release Guide](release.md)
+- [Testing](https://github.com/ShamimurRahmanShuvo/user_registration/blob/main/docs/testing.md)
+- [Release Guide](https://github.com/ShamimurRahmanShuvo/user_registration/blob/main/docs/release.md)
 
 ## Package Structure
 

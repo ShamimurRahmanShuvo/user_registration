@@ -145,4 +145,4 @@ The caller owns the Session lifecycle.
 
 The repository does not create or close the session.
 
-See [SQLAlchemy Integration](sqlalchemy.md)
+See [SQLAlchemy Integration](https://github.com/ShamimurRahmanShuvo/user_registration/blob/main/docs/sqlalchemy.md)
