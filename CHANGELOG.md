@@ -5,6 +5,37 @@ All notable changes to this project are documented in this file.
 
 The project follows Semantic Versioning.
 
+## [1.0.0] - 2026-10-01
+
+### Added
+
+- Framework-agnostic user registration service.
+- Configurable registration validation.
+- Argon2 password hashing.
+- Repository abstraction for database independence.
+- Registration hooks.
+- FastAPI integration adapter.
+- SQLAlchemy repository adapter.
+- Username and email validation.
+- Configurable registration settings.
+- Transaction-aware SQLAlchemy persistence.
+- Typed public API.
+- Comprehensive unit and integration test coverage.
+
+### Security
+
+- Passwords are never persisted in plaintext.
+- Password hashing uses Argon2.
+- Token generation uses Python's `secrets` module.
+- Duplicate registration errors use generic messages.
+- Registration persistence errors are wrapped without exposing storage details.
+
+### Compatibility
+
+- Python 3.12+
+- FastAPI adapter available separately.
+- SQLAlchemy adapter available separately.
+
 ## 1.0.0rc1 - 2026-09-30
 
 ### Added
